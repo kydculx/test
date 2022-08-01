@@ -7,18 +7,18 @@
 <%@ page import="java.util.* "%> 
 <%!
 	//================================
-	// static º¯¼ö ¹× ÇÔ¼ö ¼±¾ğºÎ
+	// static ë³€ìˆ˜ ë° í•¨ìˆ˜ ì„ ì–¸ë¶€
 	//================================
 	public static final String VERSION ="0100";
-	public static final String CONF_PATH ="D:/Dev/Workspace/BillgatePay-JSP/WEB-INF/classes/config.ini"; //*°¡¸ÍÁ¡ ¼öÁ¤ ÇÊ¼ö
+	public static final String CONF_PATH ="/WEB-INF/classes/config.ini"; //*ê°€ë§¹ì  ìˆ˜ì • í•„ìˆ˜
 	
-	// ½ÂÀÎ ¿äÃ»
+	// ìŠ¹ì¸ ìš”ì²­
 		public Message MessageAuthProcess(Map<String,String> authInfo) throws Exception {
 			String serviceId = authInfo.get("serviceId");
 			String serviceCode = authInfo.get("serviceCode");
 			String msg = authInfo.get("message");
 
-			//¸Ş½ÃÁö Length Á¦°Å
+			//ë©”ì‹œì§€ Length ì œê±°
 			byte[] b = new byte[msg.getBytes().length - 4] ;
 			System.arraycopy(msg.getBytes(), 4, b, 0, b.length);
 
@@ -33,7 +33,7 @@
 			return responseMsg;
 		}
 	
-	//¼³Á¤ ÆÄÀÏÀ» ÅëÇØ key, iv°ª °¡Á®¿È
+	//ì„¤ì • íŒŒì¼ì„ í†µí•´ key, ivê°’ ê°€ì ¸ì˜´
 		private GalaxiaCipher getCipher(String serviceId, String serviceCode) throws Exception {
 			GalaxiaCipher cipher = null ;
 
@@ -59,10 +59,10 @@
 <% 
 	/*
 	------------------------------------------------------------------------------------- 
-	ÇØ´ç ÆäÀÌÁö´Â ºô°ÔÀÌÆ® °áÁ¦¸¦ À§ÇÑ "ÀÎÁõ°á°ú ¸®ÅÏ ¹× ½ÂÀÎ¿äÃ»/ÀÀ´ä "Å×½ºÆ® ÆäÀÌÁö ÀÔ´Ï´Ù.
+	í•´ë‹¹ í˜ì´ì§€ëŠ” ë¹Œê²Œì´íŠ¸ ê²°ì œë¥¼ ìœ„í•œ "ì¸ì¦ê²°ê³¼ ë¦¬í„´ ë° ìŠ¹ì¸ìš”ì²­/ì‘ë‹µ "í…ŒìŠ¤íŠ¸ í˜ì´ì§€ ì…ë‹ˆë‹¤.
 	------------------------------------------------------------------------------------- 
 	*/	
-	/* ÀÎÁõ °á°ú º¯¼ö */
+	/* ì¸ì¦ ê²°ê³¼ ë³€ìˆ˜ */
 	String serviceId = null;
 	String serviceCode = null; 
 	String orderId = null;
@@ -75,87 +75,87 @@
 	String reserved1 = null;
 	String reserved2 = null;
 	String reserved3 = null;
-	String serviceType = null;		//¼­ºñ½º ±¸ºĞ(ÀÏ¹İ:0000/¿ùÀÚµ¿:1000)
-	String confType = null;			//Æ¾Ä³½Ã_ÀÎÁõ Å¸ÀÔ ±¸ºĞ(0000:ID ÀÎÁõ/1000:PIN ÀÎÁõ)
+	String serviceType = null;		//ì„œë¹„ìŠ¤ êµ¬ë¶„(ì¼ë°˜:0000/ì›”ìë™:1000)
+	String confType = null;			//í‹´ìºì‹œ_ì¸ì¦ íƒ€ì… êµ¬ë¶„(0000:ID ì¸ì¦/1000:PIN ì¸ì¦)
 
-	String message = null;			//ÀÎÁõ ÀÀ´ä MESSAGE
+	String message = null;			//ì¸ì¦ ì‘ë‹µ MESSAGE
 
-	//°¡»ó°èÁÂ
-	String accountNumber = null;		//°¡»ó°èÁÂ¹øÈ£
-	String bankCode = null;				//¹ß±Ş ÀºÇà ÄÚµå
-	String mixType = null;				//°Å·¡ ±¸ºĞ(ÀÏ¹İ:0000/¿¡½ºÅ©·Î:1000)
-	String expireDate = null;				//ÀÔ±İ¸¶°¨ÀÏÀÚ(YYYYMMDD)
-	String expireTime = null;			//ÀÔ±İ¸¶°¨½Ã°£(HH24MISS)
-	String amount = null;					//ÀÔ±İ¿¹Á¤±İ¾×
+	//ê°€ìƒê³„ì¢Œ
+	String accountNumber = null;		//ê°€ìƒê³„ì¢Œë²ˆí˜¸
+	String bankCode = null;				//ë°œê¸‰ ì€í–‰ ì½”ë“œ
+	String mixType = null;				//ê±°ë˜ êµ¬ë¶„(ì¼ë°˜:0000/ì—ìŠ¤í¬ë¡œ:1000)
+	String expireDate = null;				//ì…ê¸ˆë§ˆê°ì¼ì(YYYYMMDD)
+	String expireTime = null;			//ì…ê¸ˆë§ˆê°ì‹œê°„(HH24MISS)
+	String amount = null;					//ì…ê¸ˆì˜ˆì •ê¸ˆì•¡
 
-	/* ½ÂÀÎ °á°ú º¯¼ö */
+	/* ìŠ¹ì¸ ê²°ê³¼ ë³€ìˆ˜ */
 	String outTransactionId = null;
 	String outResponseCode = null;
 	String outResponseMessage = null;
 	String outDetailResponseCode = null;
 	String outDetailResponseMessage = null;
 
-	String authAmount = null; 		// ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ	_½ÂÀÎ±İ¾×
-	String authNumber = null;		// ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_½ÂÀÎ¹øÈ£
-	String authDate = null;			// ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_½ÂÀÎÀÏ½Ã
+	String authAmount = null; 		// ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°	_ìŠ¹ì¸ê¸ˆì•¡
+	String authNumber = null;		// ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ìŠ¹ì¸ë²ˆí˜¸
+	String authDate = null;			// ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ìŠ¹ì¸ì¼ì‹œ
 
-	String quota = null;					//½Å¿ëÄ«µå ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_ÇÒºÎ°³¿ù ¼ö 
-	String cardCompanyCode = null; //½Å¿ëÄ«µå ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_¹ß±Ş»ç ÄÚµå 
+	String quota = null;					//ì‹ ìš©ì¹´ë“œ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_í• ë¶€ê°œì›” ìˆ˜ 
+	String cardCompanyCode = null; //ì‹ ìš©ì¹´ë“œ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ë°œê¸‰ì‚¬ ì½”ë“œ 
 	
-	String balance = null;					//Ä³½Ã°ÔÀÌÆ® ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_ÀÜ¾×
-	String dealAmount = null;			//Ä³½Ã°ÔÀÌÆ® ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_½ÂÀÎ±İ¾×
+	String balance = null;					//ìºì‹œê²Œì´íŠ¸ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ì”ì•¡
+	String dealAmount = null;			//ìºì‹œê²Œì´íŠ¸ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ìŠ¹ì¸ê¸ˆì•¡
 	
-	String usingType = null;				//°èÁÂÀÌÃ¼ ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_Çö±İ¿µ¼öÁõ ¿ëµµ
-	String identifier = null;				//°èÁÂÀÌÃ¼ ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_Çö±İ¿µ¼öÁõ ½ÂÀÎ¹øÈ£
-	String identifierType = null;		//°èÁÂÀÌÃ¼ ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_Çö±İ¿µ¼öÁõ ÀÚÁø¹ß±Ş À¯¹«
-	String inputBankCode = null;		//°èÁÂÀÌÃ¼  ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_ÀºÇà ÄÚµå 
-	String inputAccountName = null;	//°èÁÂÀÌÃ¼  ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_ÀºÇà¸í
+	String usingType = null;				//ê³„ì¢Œì´ì²´ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_í˜„ê¸ˆì˜ìˆ˜ì¦ ìš©ë„
+	String identifier = null;				//ê³„ì¢Œì´ì²´ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_í˜„ê¸ˆì˜ìˆ˜ì¦ ìŠ¹ì¸ë²ˆí˜¸
+	String identifierType = null;		//ê³„ì¢Œì´ì²´ ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_í˜„ê¸ˆì˜ìˆ˜ì¦ ìì§„ë°œê¸‰ ìœ ë¬´
+	String inputBankCode = null;		//ê³„ì¢Œì´ì²´  ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ì€í–‰ ì½”ë“œ 
+	String inputAccountName = null;	//ê³„ì¢Œì´ì²´  ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ì€í–‰ëª…
 
-	String partCancelType = null;		//ÈŞ´ëÆù ½ÂÀÎÀÀ´ä Ãß°¡ ÆÄ¶ó¹ÌÅÍ_ºÎºĞ Ãë¼Ò Å¸ÀÔ(ÀÏ¹İ °áÁ¦½Ã¿¡¸¸ Àü´Ş)
+	String partCancelType = null;		//íœ´ëŒ€í° ìŠ¹ì¸ì‘ë‹µ ì¶”ê°€ íŒŒë¼ë¯¸í„°_ë¶€ë¶„ ì·¨ì†Œ íƒ€ì…(ì¼ë°˜ ê²°ì œì‹œì—ë§Œ ì „ë‹¬)
 
-	Map<String,String> authInfo = null;	 //½ÂÀÎ¿äÃ» Á¤º¸ ÀúÀå
+	Map<String,String> authInfo = null;	 //ìŠ¹ì¸ìš”ì²­ ì •ë³´ ì €ì¥
 
 	Message respMsg = null;			
 
 	try{
 			
 		//================================================
-		// 1. ÀÎÁõ °á°ú ÆÄ¶ó¹ÌÅÍ ¼ö½Å
+		// 1. ì¸ì¦ ê²°ê³¼ íŒŒë¼ë¯¸í„° ìˆ˜ì‹ 
 		//================================================
 		request.setCharacterEncoding("euc-kr");
 		
-		serviceType = request.getParameter("SERVICE_TYPE");						//¼­ºñ½º Å¸ÀÔ(ÀÏ¹İ :0000 , ¿ùÀÚµ¿:1000)
-		confType = request.getParameter("CONF_TYPE");								//°áÁ¦ ÀÎÁõ Å¸ÀÔ(IDÀÎÁõ: 0000, PINÀÎÁõ: 1000) *Æ¾Ä³½Ã 
-		serviceId = request.getParameter("SERVICE_ID");								//°¡¸ÍÁ¡ ¼­ºñ½º ¾ÆÀÌµğ
-		serviceCode = request.getParameter("SERVICE_CODE");						//°áÁ¦ ¼ö´Ü º° ¼­ºñ½ºÄÚµå
-		orderId = request.getParameter("ORDER_ID");										//ÁÖ¹® ¹øÈ£
-		orderDate = request.getParameter("ORDER_DATE");							//ÁÖ¹® ÀÏÀÚ
-		transactionId = request.getParameter("TRANSACTION_ID");					//°Å·¡¹øÈ£
-		responseCode = request.getParameter("RESPONSE_CODE");								//ÀÀ´äÄÚµå
-		responseMessage = request.getParameter("RESPONSE_MESSAGE");					//ÀÀ´ä¸Ş½ÃÁö
-		detailResponseCode = request.getParameter("DETAIL_RESPONSE_CODE");		//»ó¼¼ ÀÀ´äÄÚµå
-		detailResponseMessage = request.getParameter("DETAIL_RESPONSE_MESSAGE");//»ó¼¼ ÀÀ´ä ¸Ş½ÃÁö
+		serviceType = request.getParameter("SERVICE_TYPE");						//ì„œë¹„ìŠ¤ íƒ€ì…(ì¼ë°˜ :0000 , ì›”ìë™:1000)
+		confType = request.getParameter("CONF_TYPE");								//ê²°ì œ ì¸ì¦ íƒ€ì…(IDì¸ì¦: 0000, PINì¸ì¦: 1000) *í‹´ìºì‹œ 
+		serviceId = request.getParameter("SERVICE_ID");								//ê°€ë§¹ì  ì„œë¹„ìŠ¤ ì•„ì´ë””
+		serviceCode = request.getParameter("SERVICE_CODE");						//ê²°ì œ ìˆ˜ë‹¨ ë³„ ì„œë¹„ìŠ¤ì½”ë“œ
+		orderId = request.getParameter("ORDER_ID");										//ì£¼ë¬¸ ë²ˆí˜¸
+		orderDate = request.getParameter("ORDER_DATE");							//ì£¼ë¬¸ ì¼ì
+		transactionId = request.getParameter("TRANSACTION_ID");					//ê±°ë˜ë²ˆí˜¸
+		responseCode = request.getParameter("RESPONSE_CODE");								//ì‘ë‹µì½”ë“œ
+		responseMessage = request.getParameter("RESPONSE_MESSAGE");					//ì‘ë‹µë©”ì‹œì§€
+		detailResponseCode = request.getParameter("DETAIL_RESPONSE_CODE");		//ìƒì„¸ ì‘ë‹µì½”ë“œ
+		detailResponseMessage = request.getParameter("DETAIL_RESPONSE_MESSAGE");//ìƒì„¸ ì‘ë‹µ ë©”ì‹œì§€
 
-		message = request.getParameter("MESSAGE");								//ÀÎÁõ ÀÀ´ä Àü¹® ¸Ş½ÃÁö
+		message = request.getParameter("MESSAGE");								//ì¸ì¦ ì‘ë‹µ ì „ë¬¸ ë©”ì‹œì§€
 	
-		reserved1 = request.getParameter("RESERVED1");							//¿¹ºñº¯¼ö1
-		reserved2 = request.getParameter("RESERVED2");							//¿¹ºñº¯¼ö2
-		reserved3 = request.getParameter("RESERVED3");							//¿¹ºñº¯¼ö3
+		reserved1 = request.getParameter("RESERVED1");							//ì˜ˆë¹„ë³€ìˆ˜1
+		reserved2 = request.getParameter("RESERVED2");							//ì˜ˆë¹„ë³€ìˆ˜2
+		reserved3 = request.getParameter("RESERVED3");							//ì˜ˆë¹„ë³€ìˆ˜3
 
-		/*°¡»ó°èÁÂ Ã¤¹ø ÀÀ´ä*/		
-		accountNumber =request.getParameter("ACCOUNT_NUMBER");			//°¡»ó°èÁÂ¹øÈ£
-		bankCode =request.getParameter("BANK_CODE");							//¹ß±Ş ÀºÇà ÄÚµå
-		mixType = request.getParameter("MIX_TYPE");								//°Å·¡ ±¸ºĞ(ÀÏ¹İ:0000/¿¡½ºÅ©·Î:1000)
-		expireDate = request.getParameter("EXPIRE_DATE");						//ÀÔ±İ¸¶°¨ÀÏÀÚ(YYYYMMDD)
-		expireTime = request.getParameter("EXPIRE_TIME");						//ÀÔ±İ¸¶°¨½Ã°£(HH24MISS)
-		amount = request.getParameter("AMOUNT");									//ÀÔ±İ¿¹Á¤±İ¾×
+		/*ê°€ìƒê³„ì¢Œ ì±„ë²ˆ ì‘ë‹µ*/		
+		accountNumber =request.getParameter("ACCOUNT_NUMBER");			//ê°€ìƒê³„ì¢Œë²ˆí˜¸
+		bankCode =request.getParameter("BANK_CODE");							//ë°œê¸‰ ì€í–‰ ì½”ë“œ
+		mixType = request.getParameter("MIX_TYPE");								//ê±°ë˜ êµ¬ë¶„(ì¼ë°˜:0000/ì—ìŠ¤í¬ë¡œ:1000)
+		expireDate = request.getParameter("EXPIRE_DATE");						//ì…ê¸ˆë§ˆê°ì¼ì(YYYYMMDD)
+		expireTime = request.getParameter("EXPIRE_TIME");						//ì…ê¸ˆë§ˆê°ì‹œê°„(HH24MISS)
+		amount = request.getParameter("AMOUNT");									//ì…ê¸ˆì˜ˆì •ê¸ˆì•¡
 	
 		//================================================
-		// 2. ÀÎÁõ ¼º°øÀÏ °æ¿ì¿¡¸¸ ½ÂÀÎ ¿äÃ» ÁøÇà
+		// 2. ì¸ì¦ ì„±ê³µì¼ ê²½ìš°ì—ë§Œ ìŠ¹ì¸ ìš”ì²­ ì§„í–‰
 		//================================================
-		if(("0000").equals(responseCode)&&!("1800".equals(serviceCode))){ //°¡»ó°èÁÂ Á¦¿Ü
+		if(("0000").equals(responseCode)&&!("1800".equals(serviceCode))){ //ê°€ìƒê³„ì¢Œ ì œì™¸
 			
-		//°áÁ¦ Á¤º¸ Map¿¡ ÀúÀå
+		//ê²°ì œ ì •ë³´ Mapì— ì €ì¥
 		authInfo = new HashMap<String,String>();
 
 		authInfo.put("serviceId", serviceId);
@@ -163,191 +163,191 @@
 		authInfo.put("message", message);
 
 		//================================
-		// 4. ½ÂÀÎ ¿äÃ» & ½ÂÀÎ ÀÀ´ä °á°ú ¼³Á¤  
+		// 4. ìŠ¹ì¸ ìš”ì²­ & ìŠ¹ì¸ ì‘ë‹µ ê²°ê³¼ ì„¤ì •  
 		//================================				
-		//½ÂÀÎ ¿äÃ»(Message)
+		//ìŠ¹ì¸ ìš”ì²­(Message)
 		respMsg = MessageAuthProcess(authInfo);
 
-		//°áÁ¦ ¼ö´Ü º° ½ÂÀÎ ÀÀ´ä ºĞ¸®
-		//ÈŞ´ëÆù
+		//ê²°ì œ ìˆ˜ë‹¨ ë³„ ìŠ¹ì¸ ì‘ë‹µ ë¶„ë¦¬
+		//íœ´ëŒ€í°
 		if("1100".equals(serviceCode)){ 			
 
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");			//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");					//½ÂÀÎÀÏ½Ã
-			authAmount = respMsg.get("1007");				//½ÂÀÎ±İ¾×
-			partCancelType =respMsg.get("7049");			//ºÎºĞ Ãë¼Ò Å¸ÀÔ
+			outTransactionId = respMsg.get("1001");			//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");					//ìŠ¹ì¸ì¼ì‹œ
+			authAmount = respMsg.get("1007");				//ìŠ¹ì¸ê¸ˆì•¡
+			partCancelType =respMsg.get("7049");			//ë¶€ë¶„ ì·¨ì†Œ íƒ€ì…
 
-		//½Å¿ëÄ«µå	
+		//ì‹ ìš©ì¹´ë“œ	
 		}else if("0900".equals(serviceCode)){		
 	
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");				//°Å·¡¹øÈ£
-			authNumber = respMsg.get("1004");					//½ÂÀÎ¹øÈ£	
-			authDate = respMsg.get("1005");						//½ÂÀÎÀÏ½Ã
-			authAmount = respMsg.get("1007");					//½ÂÀÎ±İ¾×
-			quota = respMsg.get("0031");								//ÇÒºÎ°³¿ù ¼ö
-			cardCompanyCode = respMsg.get("0034");			//Ä«µå¹ß±Ş»ç ÄÚµå
+			outTransactionId = respMsg.get("1001");				//ê±°ë˜ë²ˆí˜¸
+			authNumber = respMsg.get("1004");					//ìŠ¹ì¸ë²ˆí˜¸	
+			authDate = respMsg.get("1005");						//ìŠ¹ì¸ì¼ì‹œ
+			authAmount = respMsg.get("1007");					//ìŠ¹ì¸ê¸ˆì•¡
+			quota = respMsg.get("0031");								//í• ë¶€ê°œì›” ìˆ˜
+			cardCompanyCode = respMsg.get("0034");			//ì¹´ë“œë°œê¸‰ì‚¬ ì½”ë“œ
 
 		
-		//°èÁÂÀÌÃ¼
+		//ê³„ì¢Œì´ì²´
 		}else if("1000".equals(serviceCode)){		
 		
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");			//°Å·¡¹øÈ£
-			authAmount = respMsg.get("1007");				//½ÂÀÎ±İ¾×
-			authDate = respMsg.get("1005");					//½ÂÀÎÀÏ½Ã
-			usingType = respMsg.get("0015");					//Çö±İ¿µ¼öÁõ ¿ëµµ
-			identifier = respMsg.get("0017");					//Çö±İ¿µ¼öÁõ ½ÂÀÎ¹øÈ£
-			identifierType = respMsg.get("0102");				//Çö±İ¿µ¼öÁõ ÀÚÁø¹ß±ŞÁ¦À¯¹«
-			mixType = respMsg.get("0037");						//°Å·¡±¸ºĞ
-			inputBankCode = respMsg.get("0105");			//ÀºÇà ÄÚµå
-			inputAccountName = respMsg.get("0107");		//ÀºÇà ¸í
+			outTransactionId = respMsg.get("1001");			//ê±°ë˜ë²ˆí˜¸
+			authAmount = respMsg.get("1007");				//ìŠ¹ì¸ê¸ˆì•¡
+			authDate = respMsg.get("1005");					//ìŠ¹ì¸ì¼ì‹œ
+			usingType = respMsg.get("0015");					//í˜„ê¸ˆì˜ìˆ˜ì¦ ìš©ë„
+			identifier = respMsg.get("0017");					//í˜„ê¸ˆì˜ìˆ˜ì¦ ìŠ¹ì¸ë²ˆí˜¸
+			identifierType = respMsg.get("0102");				//í˜„ê¸ˆì˜ìˆ˜ì¦ ìì§„ë°œê¸‰ì œìœ ë¬´
+			mixType = respMsg.get("0037");						//ê±°ë˜êµ¬ë¶„
+			inputBankCode = respMsg.get("0105");			//ì€í–‰ ì½”ë“œ
+			inputAccountName = respMsg.get("0107");		//ì€í–‰ ëª…
 		
-		//µµ¼­¹®È­»óÇ°±Ç	
+		//ë„ì„œë¬¸í™”ìƒí’ˆê¶Œ	
 		}else if("0100".equals(serviceCode)){
 		
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");			//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");					//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");				//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");				//½ÂÀÎ±İ¾×		
+			outTransactionId = respMsg.get("1001");			//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");					//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");				//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");				//ìŠ¹ì¸ê¸ˆì•¡		
 	
-		//¹®È­»óÇ°±Ç
+		//ë¬¸í™”ìƒí’ˆê¶Œ
 		}else if("0200".equals(serviceCode)){
 		
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");			//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");			//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//°ÔÀÓ¹®È­»óÇ°±Ç
+		//ê²Œì„ë¬¸í™”ìƒí’ˆê¶Œ
 		}else if("0300".equals(serviceCode)){
 			
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");			//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");			//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//ÇØÇÇ¸Ó´Ï»óÇ°±Ç
+		//í•´í”¼ë¨¸ë‹ˆìƒí’ˆê¶Œ
 		}else if("0500".equals(serviceCode)){
 			
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");			//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");			//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//Ä³½Ã°ÔÀÌÆ®	
+		//ìºì‹œê²Œì´íŠ¸	
 		}else if("0700".equals(serviceCode)){		
 
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			balance = respMsg.get("1006");					//°áÁ¦ ÈÄ ÀÜ¾×
-			dealAmount = respMsg.get("0012");			//½ÂÀÎ±İ¾×(Å¸ °áÁ¦¼ö´Ü°ú  tag°ªÀÌ ´Ù¸£¹Ç·Î ÁÖÀÇ)
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			balance = respMsg.get("1006");					//ê²°ì œ í›„ ì”ì•¡
+			dealAmount = respMsg.get("0012");			//ìŠ¹ì¸ê¸ˆì•¡(íƒ€ ê²°ì œìˆ˜ë‹¨ê³¼  tagê°’ì´ ë‹¤ë¥´ë¯€ë¡œ ì£¼ì˜)
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ
 		
-		//Æ¾Ä³½Ã	
+		//í‹´ìºì‹œ	
 		}else if("2500".equals(serviceCode)){		
 		
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");			//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");			//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 
-		// ¿¡±×¸Ó´Ï	
+		// ì—ê·¸ë¨¸ë‹ˆ	
 		}else if("2600".equals(serviceCode)){		
 		
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã	
-			authNumber = respMsg.get("1004");			//½ÂÀÎ¹øÈ£	
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ	
+			authNumber = respMsg.get("1004");			//ìŠ¹ì¸ë²ˆí˜¸	
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//ÅëÇÕÆ÷ÀÎÆ®	
+		//í†µí•©í¬ì¸íŠ¸	
 		}else if("4100".equals(serviceCode)){		
 
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã		
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ		
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//Æ¼¸Ó´Ï	
+		//í‹°ë¨¸ë‹ˆ	
 		}else if("1600".equals(serviceCode)){		
 			
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");				//½ÂÀÎÀÏ½Ã		
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");				//ìŠ¹ì¸ì¼ì‹œ		
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 		
-		//Æùºô
+		//í°ë¹Œ
 		}else if("1200".equals(serviceCode)){	
 
-			//½ÂÀÎ ÀÀ´ä
+			//ìŠ¹ì¸ ì‘ë‹µ
 			outResponseCode = respMsg.get("1002");
 			outResponseMessage = respMsg.get("1003");
 			outDetailResponseCode = respMsg.get("1009");
 			outDetailResponseMessage = respMsg.get("1010");
-			outTransactionId = respMsg.get("1001");		//°Å·¡¹øÈ£
-			authDate = respMsg.get("1005");						//½ÂÀÎÀÏ½Ã		
-			authAmount = respMsg.get("1007");			//½ÂÀÎ±İ¾×
+			outTransactionId = respMsg.get("1001");		//ê±°ë˜ë²ˆí˜¸
+			authDate = respMsg.get("1005");						//ìŠ¹ì¸ì¼ì‹œ		
+			authAmount = respMsg.get("1007");			//ìŠ¹ì¸ê¸ˆì•¡
 
-		//±× ¿Ü
+		//ê·¸ ì™¸
 		}else {
 %>				
 			<script type="text/javascript">
-				alert(<%=serviceCode%>+"RETURN ÆäÀÌÁö ¿À·ù\n¿¡·¯ ¸Ş½ÃÁö : °áÁ¦¼ö´ÜÀÇ ¼­ºñ½º ÄÚµå¸¦ È®ÀÎÇØÁÖ¼¼¿ä!/ ");
+				alert(<%=serviceCode%>+"RETURN í˜ì´ì§€ ì˜¤ë¥˜\nì—ëŸ¬ ë©”ì‹œì§€ : ê²°ì œìˆ˜ë‹¨ì˜ ì„œë¹„ìŠ¤ ì½”ë“œë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”!/ ");
 				window.close();
 			</script>
 <%	
@@ -358,7 +358,7 @@
 <head>
 <title></title>
 <style>
-	body, tr, td {font-size:9pt; font-family:¸¼Àº°íµñ,verdana; }
+	body, tr, td {font-size:9pt; font-family:ë§‘ì€ê³ ë”•,verdana; }
 	div {width: 98%; height:100%; overflow-y: auto; overflow-x:hidden;}
 </style>
 <meta charset="EUC-KR">
@@ -369,7 +369,7 @@
 	<div>
 		<table width="380px" border="0" cellpadding="0"	cellspacing="0">
 		<tr> 
-			<td height="25" style="padding-left:10px" class="title01"># ÇöÀçÀ§Ä¡ &gt;&gt; °áÁ¦Å×½ºÆ® &gt; <b>°¡¸ÍÁ¡ Return Url</b></td>
+			<td height="25" style="padding-left:10px" class="title01"># í˜„ì¬ìœ„ì¹˜ &gt;&gt; ê²°ì œí…ŒìŠ¤íŠ¸ &gt; <b>ê°€ë§¹ì  Return Url</b></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -378,161 +378,161 @@
 			<td align="center">
 				<table width="380" border="0" cellpadding="4" cellspacing="1" bgcolor="#B0B0B0">
 					<tr>
-						<td><b>ÀÎÁõ°á°ú</b></td>
+						<td><b>ì¸ì¦ê²°ê³¼</b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°¡¸ÍÁ¡ ¾ÆÀÌµğ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ë§¹ì  ì•„ì´ë””</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=serviceId%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¼­ºñ½º ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=serviceCode%></b></td>
 					</tr>
 <%
-	//ÈŞ´ëÆù(1100), Æùºô(1200) ÀÎÁõ °á°ú ÆÄ¶ó¹ÌÅÍ Ãß°¡_¼­ºñ½ºÅ¸ÀÔ(0000:ÀÏ¹İ/1000:¿ùÀÚµ¿)
+	//íœ´ëŒ€í°(1100), í°ë¹Œ(1200) ì¸ì¦ ê²°ê³¼ íŒŒë¼ë¯¸í„° ì¶”ê°€_ì„œë¹„ìŠ¤íƒ€ì…(0000:ì¼ë°˜/1000:ì›”ìë™)
 	if("1100".equals(serviceCode)||"1200".equals(serviceCode)){
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¼­ºñ½º Å¸ÀÔ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ íƒ€ì…</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=serviceType%></b></td>
 					</tr>
 <%
     }
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=orderId%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®ÀÏ½Ã</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ì¼ì‹œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=orderDate%></b></td>
 					</tr>
 <%
-	//Ä³½Ã°ÔÀÌÆ®(0700), ½Å¿ëÄ«µå(0900) °Å·¡¹øÈ£ Ãâ·Â Á¦¿Ü
+	//ìºì‹œê²Œì´íŠ¸(0700), ì‹ ìš©ì¹´ë“œ(0900) ê±°ë˜ë²ˆí˜¸ ì¶œë ¥ ì œì™¸
 	if(!("0700".equals(serviceCode)||"0900".equals(serviceCode))){
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°Å·¡¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=transactionId%></b></td>
 					</tr>
 <%
     } 
-	 //°¡»ó°èÁÂ(1800) Ã¤¹ø Á¤º¸
+	 //ê°€ìƒê³„ì¢Œ(1800) ì±„ë²ˆ ì •ë³´
     if ("1800".equals(serviceCode) && "0000".equals(responseCode)) 
     {
 %>			
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°¡»ó°èÁÂ¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ìƒê³„ì¢Œë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=accountNumber%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>±İ¾×</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê¸ˆì•¡</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=amount%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀºÇàÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì€í–‰ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=bankCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°Å·¡±¸ºĞ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜êµ¬ë¶„</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=mixType%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÔ±İ À¯È¿ ¸¸·áÀÏ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì…ê¸ˆ ìœ íš¨ ë§Œë£Œì¼</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=expireDate%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÔ±İ ¸¶°¨ ½Ã°£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì…ê¸ˆ ë§ˆê° ì‹œê°„</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=expireTime%></b></td>
 					</tr>
 <% 
     } 
-	//Æ¾Ä³½Ã(2500) ÀÎÁõ±¸ºĞ
+	//í‹´ìºì‹œ(2500) ì¸ì¦êµ¬ë¶„
 	if("2500".equals(serviceCode)){
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÎÁõ ±¸ºĞ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì¸ì¦ êµ¬ë¶„</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=confType%></b></td>
 					</tr>
 <%
 	}	
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´äÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=responseCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=responseMessage%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ÀÀ´äÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ì‘ë‹µì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=detailResponseCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ÀÀ´ä¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ì‘ë‹µë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=detailResponseMessage%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¿¹ºñº¯¼ö1</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì˜ˆë¹„ë³€ìˆ˜1</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=reserved1 %></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¿¹ºñº¯¼ö2</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì˜ˆë¹„ë³€ìˆ˜2</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=reserved2 %></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¿¹ºñº¯¼ö3</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì˜ˆë¹„ë³€ìˆ˜3</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=reserved3 %></b></td>
 					</tr>	
 					
-                    <!--ÀÎÁõ°á°ú ³¡-->
-                    <!--½ÂÀÎ°á°ú ½ÃÀÛ-->
+                    <!--ì¸ì¦ê²°ê³¼ ë-->
+                    <!--ìŠ¹ì¸ê²°ê³¼ ì‹œì‘-->
 
 					<tr>
-						<td><b>½ÂÀÎ°á°ú</b></td>
+						<td><b>ìŠ¹ì¸ê²°ê³¼</b></td>
 					</tr>
 <%
     if (outResponseCode!=null){ 
 %>	
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°Å·¡¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=outTransactionId%></b></td>
 					</tr>					
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎÀÏ½Ã</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ì¼ì‹œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=authDate%></b></td>
 					</tr>
 <% 
-	//Ä³½Ã°ÔÀÌÆ®(0700) ÀÏ °æ¿ì, °áÁ¦±İ¾×Àº dealAmount·Î Ç¥½Ã
+	//ìºì‹œê²Œì´íŠ¸(0700) ì¼ ê²½ìš°, ê²°ì œê¸ˆì•¡ì€ dealAmountë¡œ í‘œì‹œ
 	if("0700".equals(serviceCode)){	 
 %>			
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎ±İ¾×</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ê¸ˆì•¡</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=dealAmount%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÜ¾×</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì”ì•¡</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=balance%></b></td>
 					</tr>			
 <%
 	}else{	
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎ±İ¾×</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ê¸ˆì•¡</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=authAmount%></b></td>
 					</tr>	
 <%
 }
-	//½Å¿ëÄ«µå(0900), °ú¼¼ ±İ¾× Ç×¸ñ Ãß°¡
+	//ì‹ ìš©ì¹´ë“œ(0900), ê³¼ì„¸ ê¸ˆì•¡ í•­ëª© ì¶”ê°€
 	if("0900".equals(serviceCode)){
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÇÒºÎ°³¿ù ¼ö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>í• ë¶€ê°œì›” ìˆ˜</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=quota%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>Ä«µå ¹ß±Ş»ç ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì¹´ë“œ ë°œê¸‰ì‚¬ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=cardCompanyCode%></b></td>
 					</tr>
 <%
@@ -540,80 +540,80 @@
 %>
 				
 <%
-	//½Å¿ëÄ«µå(0900), °èÁÂÀÌÃ¼(0100), ¹®È­»óÇ°±Ç(0200), °ÔÀÓ¹®È­»óÇ°±Ç(0300), ÇØÇÇ¸Ó´Ï»óÇ°±Ç(0500), Æ¾Ä³½Ã(2500),¿¡±×¸Ó´Ï(2600), ½ÂÀÎ ÀÀ´ä ÆÄ¶ó¹ÌÅÍ Ãß°¡
+	//ì‹ ìš©ì¹´ë“œ(0900), ê³„ì¢Œì´ì²´(0100), ë¬¸í™”ìƒí’ˆê¶Œ(0200), ê²Œì„ë¬¸í™”ìƒí’ˆê¶Œ(0300), í•´í”¼ë¨¸ë‹ˆìƒí’ˆê¶Œ(0500), í‹´ìºì‹œ(2500),ì—ê·¸ë¨¸ë‹ˆ(2600), ìŠ¹ì¸ ì‘ë‹µ íŒŒë¼ë¯¸í„° ì¶”ê°€
 	if("0900".equals(serviceCode)||"0100".equals(serviceCode)||"0200".equals(serviceCode)||"0300".equals(serviceCode)||"0500".equals(serviceCode)||"2500".equals(serviceCode)||"2600".equals(serviceCode)){	
 %>			
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎ¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=authNumber%></b></td>
 					</tr>			
 <%
 	}
-	//°èÁÂÀÌÃ¼(1000)ÀÏ °æ¿ì, ÀÀ´ä ÆÄ¶ó¹ÌÅÍ Ãß°¡		
+	//ê³„ì¢Œì´ì²´(1000)ì¼ ê²½ìš°, ì‘ë‹µ íŒŒë¼ë¯¸í„° ì¶”ê°€		
 	if("1000".equals(serviceCode)){		
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°Å·¡±¸ºĞ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜êµ¬ë¶„</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=mixType%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>Çö±İ¿µ¼öÁõ ¿ëµµ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>í˜„ê¸ˆì˜ìˆ˜ì¦ ìš©ë„</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=usingType%></b></td>
 					</tr>	
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>Çö±İ¿µ¼öÁõ ½ÂÀÎ¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>í˜„ê¸ˆì˜ìˆ˜ì¦ ìŠ¹ì¸ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=identifier%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>Çö±İ¿µ¼öÁõ ÀÚÁø¹ß±ŞÁ¦À¯¹«</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>í˜„ê¸ˆì˜ìˆ˜ì¦ ìì§„ë°œê¸‰ì œìœ ë¬´</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=identifierType%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀºÇà ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì€í–‰ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=inputBankCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀºÇà¸í</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì€í–‰ëª…</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=inputAccountName%></b></td>
 					</tr>
 <%
 	}	
-	//ÈŞ´ëÆù(1100)ÀÌ¸é¼­ ÀÏ¹İ °áÁ¦(serviceType:0000) ÀÏ °æ¿ì, ½ÂÀÎ ÀÀ´ä ÆÄ¶ó¹ÌÅÍ Ãß°¡
+	//íœ´ëŒ€í°(1100)ì´ë©´ì„œ ì¼ë°˜ ê²°ì œ(serviceType:0000) ì¼ ê²½ìš°, ìŠ¹ì¸ ì‘ë‹µ íŒŒë¼ë¯¸í„° ì¶”ê°€
 	if("1100".equals(serviceCode)&&"0000".equals(serviceType)){
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ºÎºĞ Ãë¼Ò Å¸ÀÔ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ë¶€ë¶„ ì·¨ì†Œ íƒ€ì…</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=partCancelType%></b></td>
 					</tr>	
 <%
 	}	
 %>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´äÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=outResponseCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=outResponseMessage%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ÀÀ´äÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ì‘ë‹µì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=outDetailResponseCode%></b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ÀÀ´ä¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ì‘ë‹µë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp;<b><%=outDetailResponseMessage%></b></td>
 					</tr>
 <%
 	}else{						
 %>
 					<tr>
-						<td width="300" align="center" bgcolor="#F6F6F6" colspan="2"><b>½ÂÀÎ °á°ú ¾øÀ½</b></td>
+						<td width="300" align="center" bgcolor="#F6F6F6" colspan="2"><b>ìŠ¹ì¸ ê²°ê³¼ ì—†ìŒ</b></td>
 					</tr>		
 <%
 	}	
 %>					
-					<!-- ½ÂÀÎ°á°ú ³¡-->
+					<!-- ìŠ¹ì¸ê²°ê³¼ ë-->
 			</table>
 			</td>
 		</tr>
@@ -623,7 +623,7 @@
 	}catch(Exception ex){
 %>				
 			<script type="text/javascript">
-				alert("RETURN ÆäÀÌÁö ¿À·ù\n¿¡·¯ ¸Ş½ÃÁö : ½ÂÀÎ ¿äÃ» ¿À·ù! ");
+				alert("RETURN í˜ì´ì§€ ì˜¤ë¥˜\nì—ëŸ¬ ë©”ì‹œì§€ : ìŠ¹ì¸ ìš”ì²­ ì˜¤ë¥˜! ");
 				window.close();
 			</script>
 <%	
