@@ -13,21 +13,21 @@
 	String detailResponseMessage = request.getParameter("DETAIL_RESPONSE_MESSAGE");
 	String payMessage = request.getParameter("PAY_MESSAGE");
 	
-	/*½ÂÀÎ ¿äÃ» URL ¼³Á¤*/
-	String webApiUrl = "https://twebapi.billgate.net:10443/webapi/approve.jsp"; //Å×½ºÆ® °áÁ¦ ¿ë 
-	//String webApiUrl = "https://webapi.billgate.net:8443/webapi/approve.jsp";  //»ó¿ë °áÁ¦ ¿ë
+	/*ìŠ¹ì¸ ìš”ì²­ URL ì„¤ì •*/
+	String webApiUrl = "https://twebapi.billgate.net:10443/webapi/approve.jsp"; //í…ŒìŠ¤íŠ¸ ê²°ì œ ìš© 
+	//String webApiUrl = "https://webapi.billgate.net:8443/webapi/approve.jsp";  //ìƒìš© ê²°ì œ ìš©
 
 	if(serviceId == null || serviceCode == null || orderId == null || orderDate == null || responseCode == null){
-		responseMessage = "ÀÎÁõ °á°ú ÆÄ¶ó¹ÌÅÍ ´©¶ô";
-		detailResponseMessage = "RETURN_URLÀ» Á¡°Ë ¹Ù¶ø´Ï´Ù.";
+		responseMessage = "ì¸ì¦ ê²°ê³¼ íŒŒë¼ë¯¸í„° ëˆ„ë½";
+		detailResponseMessage = "RETURN_URLì„ ì ê²€ ë°”ëë‹ˆë‹¤.";
 	}
 
 %>
 
-<!--	°¶·°½Ã¾Æ ¸Ó´ÏÆ®¸® °áÁ¦Ã¢À» ÅëÇØ ÀÎÁõ ÀÀ´ä ¼ö½Å ÈÄ ½ÂÀÎ ¿äÃ»À» ÁøÇàÇÏ´Â ÆäÀÌÁö
-		HTTP ÇÁ·ÎÅäÄİ Åë½ÅÀ» ÀÌ¿ëÇÑ ½ÂÀÎ ¿äÃ»Àº ÇØ´ç ÆäÀÌÁöÃ³·³ Å¬¶óÀÌ¾ğÆ® ¿µ¿ª¿¡ ¹İµå½Ã ½ÇÇàµÉ ÇÊ¿ä´Â ¾øÀ¸¸ç °¡¸ÍÁ¡ ÃøÀÇ ÇÊ¿ä¿¡ µû¶ó WEB ¼­¹ö¿¡¼­ HTTP ¿äÃ» °¡´É
-		»ùÇÃÀÇ ±âº» ¼³Á¤µÈ º¯¼ö ¹× °ªÀº ÅëÇÕ Æ÷ÀÎÆ® °áÁ¦¸¦ À§ÇÑ ¿¬µ¿ ¿¹½Ã
-		°áÁ¦ ¼ö´Üº° ÆÄ¶ó¸ŞÅÍ ¿¬µ¿ ±Ô°İÀº °¡¸ÍÁ¡ ¸Ş´º¾ó 4.2 ½ÂÀÎ ¿äÃ»/ÀÀ´ä ¿µ¿ªÀ» Âü°í
+<!--	ê°¤ëŸ­ì‹œì•„ ë¨¸ë‹ˆíŠ¸ë¦¬ ê²°ì œì°½ì„ í†µí•´ ì¸ì¦ ì‘ë‹µ ìˆ˜ì‹  í›„ ìŠ¹ì¸ ìš”ì²­ì„ ì§„í–‰í•˜ëŠ” í˜ì´ì§€
+		HTTP í”„ë¡œí† ì½œ í†µì‹ ì„ ì´ìš©í•œ ìŠ¹ì¸ ìš”ì²­ì€ í•´ë‹¹ í˜ì´ì§€ì²˜ëŸ¼ í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì— ë°˜ë“œì‹œ ì‹¤í–‰ë  í•„ìš”ëŠ” ì—†ìœ¼ë©° ê°€ë§¹ì  ì¸¡ì˜ í•„ìš”ì— ë”°ë¼ WEB ì„œë²„ì—ì„œ HTTP ìš”ì²­ ê°€ëŠ¥
+		ìƒ˜í”Œì˜ ê¸°ë³¸ ì„¤ì •ëœ ë³€ìˆ˜ ë° ê°’ì€ í†µí•© í¬ì¸íŠ¸ ê²°ì œë¥¼ ìœ„í•œ ì—°ë™ ì˜ˆì‹œ
+		ê²°ì œ ìˆ˜ë‹¨ë³„ íŒŒë¼ë©”í„° ì—°ë™ ê·œê²©ì€ ê°€ë§¹ì  ë©”ë‰´ì–¼ 4.2 ìŠ¹ì¸ ìš”ì²­/ì‘ë‹µ ì˜ì—­ì„ ì°¸ê³ 
 -->
 
 <!DOCTYPE html>
@@ -35,7 +35,7 @@
 <head>
 <title></title>
 <style>
-	body, tr, td {font-size:9pt; font-family:¸¼Àº°íµñ,verdana; }
+	body, tr, td {font-size:9pt; font-family:ë§‘ì€ê³ ë”•,verdana; }
 	div {width: 98%; height:100%; overflow-y: auto; overflow-x:hidden;}
 </style>
 <meta charset="EUC-KR">
@@ -45,7 +45,7 @@
 
 <script language="JavaScript">
 
-	//½ÂÀÎ ¿äÃ»
+	//ìŠ¹ì¸ ìš”ì²­
 	function ajaxSubmit(){
 		var HForm = document.payment;
 		
@@ -56,9 +56,9 @@
 					"&ORDER_DATE=" + document.getElementsByName("ORDER_DATE")[0].value + 
 					"&PAY_MESSAGE=" + document.getElementsByName("PAY_MESSAGE")[0].value;
 	
-		//Ajax Åë½Å
+		//Ajax í†µì‹ 
 		xhr.onload = function(){
-			if(xhr.readyState == 4 && xhr.status == 200){ //Åë½Å ¼º°ø ½Ã				
+			if(xhr.readyState == 4 && xhr.status == 200){ //í†µì‹  ì„±ê³µ ì‹œ				
 				console.log(xhr.responseText);
 				var respData = JSON.parse(xhr.responseText.trim());
 				document.getElementById("auth_serviceId").innerHTML = respData.SERVICE_ID;
@@ -88,7 +88,7 @@
 	<div>
 		<table width="380px" border="0" cellpadding="0"	cellspacing="0">
 		<tr> 
-			<td height="25" style="padding-left:10px" class="title01"># ÇöÀçÀ§Ä¡ &gt;&gt; °áÁ¦Å×½ºÆ® &gt; <b>°¡¸ÍÁ¡ Return Url</b></td>
+			<td height="25" style="padding-left:10px" class="title01"># í˜„ì¬ìœ„ì¹˜ &gt;&gt; ê²°ì œí…ŒìŠ¤íŠ¸ &gt; <b>ê°€ë§¹ì  Return Url</b></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -97,46 +97,46 @@
 			<td align="center">
 				<table width="380" border="0" cellpadding="4" cellspacing="1" bgcolor="#B0B0B0">
 					<tr>
-						<td><b>ÀÎÁõ°á°ú</b></td>
+						<td><b>ì¸ì¦ê²°ê³¼</b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°¡¸ÍÁ¡ ¾ÆÀÌµğ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ë§¹ì  ì•„ì´ë””</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
 							<input name="SERVICE_ID" type="text" size=30 value="<%=serviceId%>">
 						</td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¼­ºñ½º ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
 							<input name="SERVICE_CODE" type="text" size=30 value="<%=serviceCode%>">
 						</td>
 					</tr>
 						<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
 							<input name="ORDER_ID" type="text" size=30 value="<%=orderId%>">
 						</td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®ÀÏ½Ã</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ì¼ì‹œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
 							<input name="ORDER_DATE" type="text" size=30 value="<%=orderDate%>">
 						</td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=responseCode%></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä ¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=responseMessage%></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ ÀÀ´ä ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=detailResponseCode%></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ ÀÀ´ä ¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=detailResponseMessage%></td>
 					</tr>
 					<tr>
@@ -147,59 +147,59 @@
 					</tr>
 					<tr>
 						<td align="center" bgcolor="#FFFFFF" colspan="2">
-							<input type="button" value="½ÂÀÎ ¿äÃ»" onclick="javascript:ajaxSubmit();"/>
+							<input type="button" value="ìŠ¹ì¸ ìš”ì²­" onclick="javascript:ajaxSubmit();"/>
 						</td>
 					</tr>
 				
 					<tr>
-						<td><b>½ÂÀÎ°á°ú</b></td>
+						<td><b>ìŠ¹ì¸ê²°ê³¼</b></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°¡¸ÍÁ¡ ¾ÆÀÌµğ</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ë§¹ì  ì•„ì´ë””</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_serviceId"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>¼­ºñ½º ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_serviceCode"></td>
 					</tr>
 						<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_orderId"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÁÖ¹®ÀÏ½Ã</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ì¼ì‹œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_orderDate"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>°Å·¡¹øÈ£</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜ë²ˆí˜¸</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_transactionId"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>Ãë¼ÒÅ°</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì·¨ì†Œí‚¤</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_cancelKey"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎÀÏ½Ã</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ì¼ì‹œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_authDate"></td>
 					</tr>				
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>½ÂÀÎ±İ¾×</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ê¸ˆì•¡</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_authAmount"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_responseCode"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>ÀÀ´ä ¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_responseMessage"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ ÀÀ´ä ÄÚµå</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ì½”ë“œ</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_detailResponseCode"></td>
 					</tr>
 					<tr>
-						<td width="100" align="center" bgcolor="#F6F6F6"><b>»ó¼¼ ÀÀ´ä ¸Ş½ÃÁö</b></td>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ë©”ì‹œì§€</b></td>
 						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_detailResponseMessage"></td>
 					</tr>
 				</table>
