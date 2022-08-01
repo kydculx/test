@@ -1,209 +1,212 @@
-<!--
-	°¶·°½Ã¾Æ ¸Ó´ÏÆ®¸® °áÁ¦Ã¢À» È£ÃâÇÏ´Â ÆäÀÌÁö
-	»ùÇÃÀÇ ±âº» ¼³Á¤µÈ º¯¼ö ¹× °ªÀº ÅëÇÕ Æ÷ÀÎÆ® °áÁ¦¸¦ À§ÇÑ ¿¬µ¿ ¿¹½Ã
-	°áÁ¦ ¼ö´Üº° ÆÄ¶ó¸ŞÅÍ ¿¬µ¿ ±Ô°İÀº °¡¸ÍÁ¡ ¸Ş´º¾ó 4.1.2 °áÁ¦Ã¢ ¿äÃ» ÆÄ¶ó¹ÌÅÍ Á¤º¸¸¦ Âü°í
+<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR"%>
+
+<%
+	request.setCharacterEncoding("EUC_KR");
+
+	String serviceId = request.getParameter("SERVICE_ID");
+	String serviceCode = request.getParameter("SERVICE_CODE");
+	String orderId = request.getParameter("ORDER_ID");
+	String orderDate = request.getParameter("ORDER_DATE");
+	String responseCode = request.getParameter("RESPONSE_CODE");
+	String responseMessage = request.getParameter("RESPONSE_MESSAGE");
+	String detailResponseCode = request.getParameter("DETAIL_RESPONSE_CODE");
+	String detailResponseMessage = request.getParameter("DETAIL_RESPONSE_MESSAGE");
+	String payMessage = request.getParameter("PAY_MESSAGE");
+	
+	/*ìŠ¹ì¸ ìš”ì²­ URL ì„¤ì •*/
+	String webApiUrl = "https://twebapi.billgate.net:10443/webapi/approve.jsp"; //í…ŒìŠ¤íŠ¸ ê²°ì œ ìš© 
+	//String webApiUrl = "https://webapi.billgate.net:8443/webapi/approve.jsp";  //ìƒìš© ê²°ì œ ìš©
+
+	if(serviceId == null || serviceCode == null || orderId == null || orderDate == null || responseCode == null){
+		responseMessage = "ì¸ì¦ ê²°ê³¼ íŒŒë¼ë¯¸í„° ëˆ„ë½";
+		detailResponseMessage = "RETURN_URLì„ ì ê²€ ë°”ëë‹ˆë‹¤.";
+	}
+
+%>
+
+<!--	ê°¤ëŸ­ì‹œì•„ ë¨¸ë‹ˆíŠ¸ë¦¬ ê²°ì œì°½ì„ í†µí•´ ì¸ì¦ ì‘ë‹µ ìˆ˜ì‹  í›„ ìŠ¹ì¸ ìš”ì²­ì„ ì§„í–‰í•˜ëŠ” í˜ì´ì§€
+		HTTP í”„ë¡œí† ì½œ í†µì‹ ì„ ì´ìš©í•œ ìŠ¹ì¸ ìš”ì²­ì€ í•´ë‹¹ í˜ì´ì§€ì²˜ëŸ¼ í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì— ë°˜ë“œì‹œ ì‹¤í–‰ë  í•„ìš”ëŠ” ì—†ìœ¼ë©° ê°€ë§¹ì  ì¸¡ì˜ í•„ìš”ì— ë”°ë¼ WEB ì„œë²„ì—ì„œ HTTP ìš”ì²­ ê°€ëŠ¥
+		ìƒ˜í”Œì˜ ê¸°ë³¸ ì„¤ì •ëœ ë³€ìˆ˜ ë° ê°’ì€ í†µí•© í¬ì¸íŠ¸ ê²°ì œë¥¼ ìœ„í•œ ì—°ë™ ì˜ˆì‹œ
+		ê²°ì œ ìˆ˜ë‹¨ë³„ íŒŒë¼ë©”í„° ì—°ë™ ê·œê²©ì€ ê°€ë§¹ì  ë©”ë‰´ì–¼ 4.2 ìŠ¹ì¸ ìš”ì²­/ì‘ë‹µ ì˜ì—­ì„ ì°¸ê³ 
 -->
 
 <!DOCTYPE html>
 <html>
 <head>
+<title></title>
+<style>
+	body, tr, td {font-size:9pt; font-family:ë§‘ì€ê³ ë”•,verdana; }
+	div {width: 98%; height:100%; overflow-y: auto; overflow-x:hidden;}
+</style>
 <meta charset="EUC-KR">
-<title>°áÁ¦ Å×½ºÆ®</title>
-<script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js" ></script>
-<!--Å×½ºÆ® ¼­¹ö js-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<title>Insert title here</title>
+</head>
 
-<script type="text/javascript">
-	
-    function init(){
-        var HForm = document.payment;
-        
-		HForm.SERVICE_CODE.value = '4100'			
-		// ¼­ºñ½º ÄÚµå :	µµ¼­»óÇ°±Ç : 0100, ¹®È­»óÇ°±Ç : 0200°ÔÀÓ¹®È­»óÇ°±Ç : 0300, ÇØÇÇ¸Ó´Ï»óÇ°±Ç : 0500, Ä³½Ã°ÔÀÌÆ® : 0700, ½Å¿ëÄ«µå : 0900, 
-		//					°èÁÂÀÌÃ¼ : 1000, ÈŞ´ëÆù : 1100, Æùºô : 1200, Æ¼¸Ó´Ï : 1600, °¡»ó°èÁÂ : 1800, Æ¾Ä³½Ã : 2500, ¿¡±×¸Ó´Ï : 2600, ÅëÇÕÆ÷ÀÎÆ®°áÁ¦ : 4100
-		
-		HForm.SERVICE_ID.value = "M2103135";								// Å×½ºÆ® ¾ÆÀÌµğ : M2103135
-        HForm.ORDER_DATE.value = getStrDate();								// ÁÖ¹®ÀÏ½Ã
-        HForm.ORDER_ID.value = "test_" + getStrDate();						// ÁÖ¹®¹øÈ£
-        HForm.USER_ID.value = "user_id";									// °í°´ID
-        HForm.USER_NAME.value = "È«±æµ¿";									// °í°´¸í
-        HForm.USER_EMAIL.value = "test@test.com";							// °í°´ÀÌ¸ŞÀÏ
-        HForm.ITEM_CODE.value = "item_code";								// »óÇ°ÄÚµå
-        HForm.ITEM_NAME.value = "Å×½ºÆ®»óÇ°_123";							// »óÇ°¸í
-        HForm.AMOUNT.value = "1004";										// ±İ¾×
-        HForm.RETURN_URL.value = "http://127.0.0.1:88/JSP/PayReturn.asp";	// °¡¸ÍÁ¡ Ãø ¸®ÅÏ URL : °¡¸ÍÁ¡ ÃøÀÇ WEB ¼­ºñ½º Æ¯¼º(JSP, ASP, ASP.NET, PHP)¿¡ ¸Âµµ·Ï ¼³Á¤
-        HForm.CANCEL_FLAG.value = "Y"										// Ãë¼Ò°á°ú Àü´Ş ¿©ºÎ (Y, N)
-		HForm.WEBAPI_FLAG.value = "Y"										// WEBAPI  »ç¿ë ¿©ºÎ (Y, N)
-        HForm.RESERVED1.value = "¿¹ºñº¯¼ö1"									// ¿¹ºñº¯¼ö1
-        HForm.RESERVED2.value = "¿¹ºñº¯¼ö2"									// ¿¹ºñº¯¼ö2
-        HForm.RESERVED3.value = "¿¹ºñº¯¼ö3"									// ¿¹ºñº¯¼ö3
-    }
+<script language="JavaScript">
 
-	//==========================
-	// °áÁ¦Ã¢ È£Ãâ 
-	//==========================
-	function checkSubmit(viewType){
+	//ìŠ¹ì¸ ìš”ì²­
+	function ajaxSubmit(){
 		var HForm = document.payment;
 		
-		var serviceId = HForm.SERVICE_ID.value;
-		var serviceCode = HForm.SERVICE_CODE.value;
-
-		if("null"==serviceCode||""==serviceCode){
-			alert("°áÁ¦¼ö´ÜÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");
-			return;
-		}
+		var xhr = new XMLHttpRequest();
+		var data =	"SERVICE_CODE=" + document.getElementsByName("SERVICE_CODE")[0].value + 
+					"&SERVICE_ID=" + document.getElementsByName("SERVICE_ID")[0].value + 
+					"&ORDER_ID=" + document.getElementsByName("ORDER_ID")[0].value + 
+					"&ORDER_DATE=" + document.getElementsByName("ORDER_DATE")[0].value + 
+					"&PAY_MESSAGE=" + document.getElementsByName("PAY_MESSAGE")[0].value;
+	
+		//Ajax í†µì‹ 
+		xhr.onload = function(){
+			if(xhr.readyState == 4 && xhr.status == 200){ //í†µì‹  ì„±ê³µ ì‹œ				
+				console.log(xhr.responseText);
+				var respData = JSON.parse(xhr.responseText.trim());
+				document.getElementById("auth_serviceId").innerHTML = respData.SERVICE_ID;
+				document.getElementById("auth_serviceCode").innerHTML = respData.SERVICE_CODE;
+				document.getElementById("auth_orderId").innerHTML = respData.ORDER_ID;
+				document.getElementById("auth_orderDate").innerHTML = respData.ORDER_DATE;
+				document.getElementById("auth_transactionId").innerHTML = respData.TRANSACTION_ID;
+				document.getElementById("auth_cancelKey").innerHTML = respData.CANCEL_KEY;
+				document.getElementById("auth_authDate").innerHTML = respData.AUTH_DATE;
+				document.getElementById("auth_authAmount").innerHTML = respData.AUTH_AMOUNT;
+				document.getElementById("auth_responseCode").innerHTML = respData.RESPONSE_CODE;
+				document.getElementById("auth_responseMessage").innerHTML = respData.RESPONSE_MESSAGE;
+				document.getElementById("auth_detailResponseCode").innerHTML = respData.DETAIL_RESPONSE_CODE;
+				document.getElementById("auth_detailResponseMessage").innerHTML = respData.DETAIL_RESPONSE_MESSAGE;
+			}
+		};
 		
-		if ("null" == viewType || "" == viewType) {
-			alert("ºä Å¸ÀÔÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
-		}
-		/*
-		GX_pay(
-		frmName : °áÁ¦ form name ÀÔ·Â, 
-		viewType : layerpopup ·¹ÀÌ¾îÆË¾÷, popup : À©µµ¿ìÆË¾÷, submit : ÆäÀÌÁö ÀÌµ¿ 
-		protocolType : http_tpay(Å×½ºÆ® http), https_tpay(Å×½ºÆ® https), https_pay(»ó¿ë https)
-		*/	
-		
-		GX_pay("payment", viewType ,"http_tpay");	//Å×½ºÆ® ¼­¹ö ¿¬µ¿(½Ç°áÁ¦°¡ ¹ß»ıÇÏÁö ¾ÊÀ½)
-		//GX_pay("payment", viewType ,"https_pay");	//»ó¿ë ¼­¹ö ¿¬µ¿(½Ç°áÁ¦°¡ ¹ß»ı)
+		xhr.open("POST","<%=webApiUrl%>",true);
+		xhr.setRequestHeader('Accept','application/x-www-form-urlencoded xml');
+		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded; charset=EUC-KR');
+		xhr.setRequestHeader('Accept-language','gx');
+		xhr.send(data);
 	}
 	
-
-	//==========================
-	// ·¹ÀÌ¾î ÆË¾÷ ´İ±â
-	//==========================
-	function layer_close(){
-		GX_payClose();
-	}
-
-	//==========================
-	// ÇöÀç ³¯Â¥½Ã°£ °¡Á®¿À±â
-	//==========================
-	function getStrDate() {
-		var date = new Date();
-		var strDate = 	(date.getFullYear().toString()) + 
-						((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString()) +
-						((date.getDate()) < 10 ? "0" + (date.getDate()).toString() : (date.getDate()).toString()) +
-						((date.getHours()) < 10 ? "0" + (date.getHours()).toString() : (date.getHours()).toString()) +
-						((date.getMinutes()) < 10 ? "0" + (date.getMinutes()).toString() : (date.getMinutes()).toString()) +
-						((date.getSeconds()) < 10 ? "0" + (date.getSeconds()).toString() : (date.getSeconds()).toString());
-		return strDate;
-	}
-
-	function makeOrderId(){
-		document.payment.ORDER_ID.value = "test_" + getStrDate();	// ÁÖ¹®¹øÈ£ ½Å±Ô»ı¼º
-	}
-
-</script>	
-<style>
-	header{position: fixed;	top: 0;	left: 0; right: 0;}	
-	body, tr, td {font-size:9pt; font-family:¸¼Àº°íµñ,verdana; }
-	table {	border-collapse: collapse;}	
-</style>
-</head>
-<body onload="init()">
-<header>
-	<div style="width:100%; heghit:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280;text-align: center;">
-		ºô°ÔÀÌÆ® °áÁ¦ Å×½ºÆ® »ùÇÃÆäÀÌÁö
-	</div>
-</header>
-
-		
-	<div style="padding : 20px 0 20px 0; width:100%; display: block; float:left; ">
-		<b style="color:red;"><À¯ÀÇ»çÇ×></b><br/>
-		<b>- ´ç»ç¿¡¼­ Á¦°øÇÏ´Â »ùÇÃÀº ¿¬µ¿¿¡ ÀÌÇØ¸¦ µ½±âÀ§ÇØ ´Ü°èº°·Î ³ª¿­ÇÑ °ÍÀÌ¹Ç·Î, µ¿ÀÏÇÑ ±¸Á¶¸¦ À¯ÁöÇÒ ÇÊ¿ä°¡ ¾øÀ½À» ¾Ë·Áµå¸³´Ï´Ù.</b><br/>
-		- °Å·¡ °Ç ±¸º°À» À§ÇØ Áßº¹µÈ ÁÖ¹®¹øÈ£(ORDER_ID)·Î °ú±İ ¿äÃ»Àº ±ÇÀåÇÏÁö ¾Ê½À´Ï´Ù.<br/>	
-	</div>
-		
-	<div style="width:100%; display: block; float:left;">
-		<form name="payment" method="post">
-			<table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">	
-				<tr>
-					<td colspan="4" height="20" align="left" bgcolor="#C0C0C0"><b>°áÁ¦ Á¤º¸</b></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">°¡¸ÍÁ¡¾ÆÀÌµğ<br/>(SERVICE_ID)</td>
-					<td  width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_ID" id="SERVICE_ID" size=30 class="input"><br/>(ÀÏ¹İ°áÁ¦:glx_api)</td>
-					<td width="150" align="left" bgcolor="#F6F6F6">°áÁ¦Å¸ÀÔ<br/>(SERVICE_TYPE)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_TYPE" size=40 class="input" value="0000"><br/>(ÀÏ¹İ°áÁ¦:0000)</td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">¼­ºñ½ºÄÚµå<br/>(SERVICE_CODE)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_CODE" id="SERVICE_CODE" size=30 class="input" value=""></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">°áÁ¦ ±İ¾×<br/>(AMOUNT)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="AMOUNT" size=40 class="input" ></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">»óÇ°¸í<br/>(ITEM_NAME)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" size=30 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">»óÇ°ÄÚµå<br/>(ITEM_CODE)</td>
-					<td bgcolor="#FFFFFF"><input type="text" name="ITEM_CODE" size=40 class="input"></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">°í°´ ¾ÆÀÌµğ<br/>(USER_ID)</td>
-					<td bgcolor="#FFFFFF"><input type="text" name="USER_ID" size=30 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">°í°´¸í<br/>(USER_NAME)</td>
-					<td bgcolor="#FFFFFF"><input type="text" name="USER_NAME" size=40 class="input"></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">°í°´ÀÌ¸ŞÀÏ<br/>(USER_EMAIL)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_EMAIL" size=30 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">ÁÖ¹®ÀÏ½Ã<br/>(ORDER_DATE)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="ORDER_DATE" size=40 class="input"></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">ÁÖ¹®¹øÈ£<br/>(ORDER_ID)</td>
-					<td bgcolor="#FFFFFF" colspan="3">
-						<input type="text" name="ORDER_ID" size=30 class="input" >
-						<input type="button" name="" value="ÁÖ¹®¹øÈ£ Àç»ı¼º" onclick="javascript:void(makeOrderId())"></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö1<br/>(RESERVED1)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED1" size=30 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö2<br/>(RESERVED2)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED2" size=40 class="input"></td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö3<br/>(RESERVED3)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED3" size=30 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">Ãë¼Ò°á°ú Àü´Ş¿©ºÎ<br/>(CANCEL_FLAG)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="CANCEL_FLAG" size=40 class="input""><br/>(Y:Return Ãë¼Ò ÀÀ´ä, N:self.close())</td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">¸®ÅÏURL<br/>(RETURN_URL)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RETURN_URL" size=40 class="input"></td>
-					<td width="150" align="left" bgcolor="#F6F6F6">WEB-API »ç¿ë¿©ºÎ<br/>(CANCEL_FLAG)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="WEBAPI_FLAG" size=40 class="input""><br/>(Y:»ç¿ë, N:¹Ì»ç¿ë)</td>
-				</tr>
-				<tr>
-					<td width="150" align="left" bgcolor="#F6F6F6">·Î°í<br/>(LOGO)</td>
-					<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="LOGO" size=80 class="input" value=""><br/>(ÀÌ¹ÌÁö ·Î°í URL ÀÔ·Â)</td>
-				</tr>
+</script>
+<body>
+	<div>
+		<table width="380px" border="0" cellpadding="0"	cellspacing="0">
+		<tr> 
+			<td height="25" style="padding-left:10px" class="title01"># í˜„ì¬ìœ„ì¹˜ &gt;&gt; ê²°ì œí…ŒìŠ¤íŠ¸ &gt; <b>ê°€ë§¹ì  Return Url</b></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<table width="380" border="0" cellpadding="4" cellspacing="1" bgcolor="#B0B0B0">
+					<tr>
+						<td><b>ì¸ì¦ê²°ê³¼</b></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ë§¹ì  ì•„ì´ë””</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
+							<input name="SERVICE_ID" type="text" size=30 value="<%=serviceId%>">
+						</td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
+							<input name="SERVICE_CODE" type="text" size=30 value="<%=serviceCode%>">
+						</td>
+					</tr>
+						<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ë²ˆí˜¸</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
+							<input name="ORDER_ID" type="text" size=30 value="<%=orderId%>">
+						</td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ì¼ì‹œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
+							<input name="ORDER_DATE" type="text" size=30 value="<%=orderDate%>">
+						</td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=responseCode%></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ë©”ì‹œì§€</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=responseMessage%></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=detailResponseCode%></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ë©”ì‹œì§€</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; <%=detailResponseMessage%></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>PAY_MESSAGE</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF">&nbsp; 
+							<input name="PAY_MESSAGE" type="text" size=30 value="<%=payMessage%>">
+						</td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#FFFFFF" colspan="2">
+							<input type="button" value="ìŠ¹ì¸ ìš”ì²­" onclick="javascript:ajaxSubmit();"/>
+						</td>
+					</tr>
 				
-				<!-- °áÁ¦Ã¢ Ãß°¡ ÆÄ¶ó¸ŞÅÍ ¿µ¿ª-->
-				<!--
-				<tr id="add_view"">
-					<td colspan="4"><b>Ãß°¡ ÆÄ¶ó¹ÌÅÍ ¿µ¿ª</b></td>
-				</tr>
-				<tr id="add_moneytree_view" style="display:none;">
-					<td width="150" align="left" bgcolor="#F6F6F6">»ı³â¿ùÀÏ<br/>(SOCIAL_NUMBER)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SOCIAL_NUMBER" size=30 class="input" value="" maxlength="8"><br/>(YYYYMMDD)</td>
-					<td width="150" align="left" bgcolor="#F6F6F6">È¸¿ø CI<br/>(USER_CI)</td>
-					<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_CI" size=30 class="input" value=""><br/></td>
-				</tr>
-				<tr style="display:none;">
-					<td width="150" align="left" bgcolor="#F6F6F6">ÈŞ´ëÆù ¹øÈ£<br/>(MOBILE_NUMBER)</td>
-					<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="MOBILE_NUMBER" size=30 class="input" value="" maxlength="11"><br/>-(ÇÏÀÌÇÂ) ¾øÀÌ ÀÔ·Â</td>
-				</tr>
-				-->
-			</table>
-		</form>
-
-		<div style="padding : 0px 0 10px 0; width:100%; display: block; float:left; ">
-			<br/><input type="button" value="°áÁ¦Ã¢ È£Ãâ(layerpopup) PC Àü¿ë" onclick="javascript:checkSubmit('layerpopup');">
-			&nbsp;<input type="button" value="°áÁ¦Ã¢ È£Ãâ(submit)" onclick="javascript:checkSubmit('submit');">
-			&nbsp;<input type="button" value="°áÁ¦Ã¢ È£Ãâ(popup)" onclick="javascript:checkSubmit('popup');">
-			<br/>
-		</div>
+					<tr>
+						<td><b>ìŠ¹ì¸ê²°ê³¼</b></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê°€ë§¹ì  ì•„ì´ë””</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_serviceId"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì„œë¹„ìŠ¤ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_serviceCode"></td>
+					</tr>
+						<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ë²ˆí˜¸</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_orderId"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì£¼ë¬¸ì¼ì‹œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_orderDate"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ê±°ë˜ë²ˆí˜¸</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_transactionId"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì·¨ì†Œí‚¤</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_cancelKey"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ì¼ì‹œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_authDate"></td>
+					</tr>				
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìŠ¹ì¸ê¸ˆì•¡</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_authAmount"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_responseCode"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ì‘ë‹µ ë©”ì‹œì§€</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_responseMessage"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ì½”ë“œ</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_detailResponseCode"></td>
+					</tr>
+					<tr>
+						<td width="100" align="center" bgcolor="#F6F6F6"><b>ìƒì„¸ ì‘ë‹µ ë©”ì‹œì§€</b></td>
+						<td width="200" align="left" bgcolor="#FFFFFF" id = "auth_detailResponseMessage"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
 	</div>
-
 </body>
+
 </html>
