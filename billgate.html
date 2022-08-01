@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<script type="text/javascript" src="https://tpay.billgate.net/paygate/plugin/gx_web_client.js" ></script>
+<!--테스트 서버 js-->
+
+<script type="text/javascript">
+
+  function init() {
+	// var HForm = document.payment;
+
+  // 서비스 코드 :	도서상품권 : 0100, 문화상품권 : 0200게임문화상품권 : 0300, 해피머니상품권 : 0500, 캐시게이트 : 0700, 신용카드 : 0900,
+  // 					계좌이체 : 1000, 휴대폰 : 1100, 폰빌 : 1200, 티머니 : 1600, 가상계좌 : 1800, 틴캐시 : 2500, 에그머니 : 2600, 통합포인트결제 : 4100
+
+	// HForm.SERVICE_CODE.value = '1000'
+	// HForm.SERVICE_ID.value = "M2103135";								// 테스트 아이디 : M2103135
+	// HForm.ORDER_DATE.value = getStrDate();								// 주문일시
+	// HForm.ORDER_ID.value = "test_" + getStrDate();						// 주문번호
+	// HForm.USER_ID.value = "user_id";									// 고객ID
+	// HForm.USER_NAME.value = "홍길동";									// 고객명
+	// HForm.USER_EMAIL.value = "test@test.com";							// 고객이메일
+	// HForm.ITEM_CODE.value = "item_code";								// 상품코드
+	// HForm.ITEM_NAME.value = "테스트상품_123";							// 상품명
+	// HForm.AMOUNT.value = "1";										// 금액
+	// HForm.RETURN_URL.value = "http://127.0.0.1:88/JSP/PayReturn.asp";	// 가맹점 측 리턴 URL : 가맹점 측의 WEB 서비스 특성(JSP, ASP, ASP.NET, PHP)에 맞도록 설정
+	// HForm.CANCEL_FLAG.value = "Y"										// 취소결과 전달 여부 (Y, N)
+	// HForm.WEBAPI_FLAG.value = "Y"										// WEBAPI  사용 여부 (Y, N)
+	// HForm.RESERVED1.value = "예비변수1"									// 예비변수1
+	// HForm.RESERVED2.value = "예비변수2"									// 예비변수2
+	// HForm.RESERVED3.value = "예비변수3"			
+  }
+
+
+  function set(serviceCode, userId, userName, userEmail, itemName, amount){
+	var HForm = document.payment;
+
+  // 서비스 코드 :	도서상품권 : 0100, 문화상품권 : 0200게임문화상품권 : 0300, 해피머니상품권 : 0500, 캐시게이트 : 0700, 신용카드 : 0900,
+  //					계좌이체 : 1000, 휴대폰 : 1100, 폰빌 : 1200, 티머니 : 1600, 가상계좌 : 1800, 틴캐시 : 2500, 에그머니 : 2600, 통합포인트결제 : 4100
+
+	HForm.SERVICE_CODE.value = serviceCode,
+	HForm.SERVICE_ID.value = "M2103135";								// 테스트 아이디 : M2103135
+	HForm.ORDER_DATE.value = getStrDate();								// 주문일시
+	HForm.ORDER_ID.value = "test_" + getStrDate();						// 주문번호
+	HForm.USER_ID.value = userId;									// 고객ID
+	HForm.USER_NAME.value = userName;									// 고객명
+	HForm.USER_EMAIL.value = userEmail;							// 고객이메일
+	HForm.ITEM_CODE.value = "item_code";								// 상품코드
+	HForm.ITEM_NAME.value = itemName;							// 상품명
+	HForm.AMOUNT.value = amount;										// 금액
+	HForm.RETURN_URL.value = "http://127.0.0.1:88/JSP/PayReturn.asp";	// 가맹점 측 리턴 URL : 가맹점 측의 WEB 서비스 특성(JSP, ASP, ASP.NET, PHP)에 맞도록 설정
+	HForm.CANCEL_FLAG.value = "Y"										// 취소결과 전달 여부 (Y, N)
+	HForm.WEBAPI_FLAG.value = "Y"										// WEBAPI  사용 여부 (Y, N)
+	HForm.RESERVED1.value = "예비변수1"									// 예비변수1
+	HForm.RESERVED2.value = "예비변수2"									// 예비변수2
+	HForm.RESERVED3.value = "예비변수3"									// 예비변수3
+  }
+
+  //==========================
+  // 결제창 호출
+  //==========================
+  function checkSubmit(){
+
+	// /*
+	// GX_pay(
+	// frmName : 결제 form name 입력,
+	// viewType : layerpopup 레이어팝업, popup : 윈도우팝업, submit : 페이지 이동
+	// protocolType : http_tpay(테스트 http), https_tpay(테스트 https), https_pay(상용 https)
+	// */
+
+	GX_pay('payment', 'submit' ,"http_tpay");	//테스트 서버 연동(실결제가 발생하지 않음)
+	//GX_pay("payment", viewType ,"https_pay");	//상용 서버 연동(실결제가 발생)
+
+  }
+
+  //==========================
+  // 레이어 팝업 닫기
+  //==========================
+  function layer_close(){
+	GX_payClose();
+  }
+
+  //==========================
+  // 현재 날짜시간 가져오기
+  //==========================
+  function getStrDate() {
+	var date = new Date();
+	var strDate = 	(date.getFullYear().toString()) +
+			((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString()) +
+			((date.getDate()) < 10 ? "0" + (date.getDate()).toString() : (date.getDate()).toString()) +
+			((date.getHours()) < 10 ? "0" + (date.getHours()).toString() : (date.getHours()).toString()) +
+			((date.getMinutes()) < 10 ? "0" + (date.getMinutes()).toString() : (date.getMinutes()).toString()) +
+			((date.getSeconds()) < 10 ? "0" + (date.getSeconds()).toString() : (date.getSeconds()).toString());
+	return strDate;
+  }
+
+
+  function makeOrderId(){
+	document.payment.ORDER_ID.value = "test_" + getStrDate();	// 주문번호 신규생성
+  }
+
+</script>
+<style>
+  header{position: fixed;	top: 0;	left: 0; right: 0;}
+  body, tr, td {font-size:9pt; font-family:맑은고딕,verdana; }
+  table {	border-collapse: collapse;}
+</style>
+</head>
+  <body onload="init()">
+<header>
+  <div style="width:100%; heghit:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280;text-align: center;">
+	빌게이트 결제 테스트 샘플페이지
+  </div>
+</header>
+
+  <div style="padding : 20px 0 20px 0; width:100%; display: block; float:left; ">
+	<b style="color:red;"><유의사항></b><br/>
+	<b>- 당사에서 제공하는 샘플은 연동에 이해를 돕기위해 단계별로 나열한 것이므로, 동일한 구조를 유지할 필요가 없음을 알려드립니다.</b><br/>
+	- 거래 건 구별을 위해 중복된 주문번호(ORDER_ID)로 과금 요청은 권장하지 않습니다.<br/>
+  </div>
+
+  <div style="width:100%; display: block; float:left;">
+	<form name="payment" method="post">
+
+	  <table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">
+		<tr>
+		  <td colspan="4" height="20" align="left" bgcolor="#C0C0C0"><b>결제 정보</b></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">가맹점아이디<br/>(SERVICE_ID)</td>
+		  <td  width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_ID" id="SERVICE_ID" size=30 class="input"><br/>(일반결제:glx_api)</td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">결제타입<br/>(SERVICE_TYPE)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_TYPE" size=40 class="input" value="0000"><br/>(일반결제:0000)</td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">서비스코드<br/>(SERVICE_CODE)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_CODE" id="SERVICE_CODE" size=30 class="input" value=""></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">결제 금액<br/>(AMOUNT)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="AMOUNT" size=40 class="input" ></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">상품명<br/>(ITEM_NAME)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" size=30 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">상품코드<br/>(ITEM_CODE)</td>
+		  <td bgcolor="#FFFFFF"><input type="text" name="ITEM_CODE" size=40 class="input"></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">고객 아이디<br/>(USER_ID)</td>
+		  <td bgcolor="#FFFFFF"><input type="text" name="USER_ID" size=30 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">고객명<br/>(USER_NAME)</td>
+		  <td bgcolor="#FFFFFF"><input type="text" name="USER_NAME" size=40 class="input"></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">고객이메일<br/>(USER_EMAIL)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_EMAIL" size=30 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">주문일시<br/>(ORDER_DATE)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="ORDER_DATE" size=40 class="input"></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">주문번호<br/>(ORDER_ID)</td>
+		  <td bgcolor="#FFFFFF" colspan="3">
+			<input type="text" name="ORDER_ID" size=30 class="input" >
+			<input type="button" name="" value="주문번호 재생성" onclick="javascript:void(makeOrderId())"></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">예비변수1<br/>(RESERVED1)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED1" size=30 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">예비변수2<br/>(RESERVED2)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED2" size=40 class="input"></td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">예비변수3<br/>(RESERVED3)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED3" size=30 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">취소결과 전달여부<br/>(CANCEL_FLAG)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="CANCEL_FLAG" size=40 class="input""><br/>(Y:Return 취소 응답, N:self.close())</td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">리턴URL<br/>(RETURN_URL)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="RETURN_URL" size=40 class="input"></td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">WEB-API 사용여부<br/>(CANCEL_FLAG)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="WEBAPI_FLAG" size=40 class="input""><br/>(Y:사용, N:미사용)</td>
+		</tr>
+		<tr>
+		  <td width="150" align="left" bgcolor="#F6F6F6">로고<br/>(LOGO)</td>
+		  <td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="LOGO" size=80 class="input" value=""><br/>(이미지 로고 URL 입력)</td>
+		</tr>
+
+		<!-- 결제창 추가 파라메터 영역-->
+		<tr id="add_view"">
+		  <td colspan="4"><b>추가 파라미터 영역</b></td>
+		</tr>
+		<tr id="add_moneytree_view" style="display:none;">
+		  <td width="150" align="left" bgcolor="#F6F6F6">생년월일<br/>(SOCIAL_NUMBER)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="SOCIAL_NUMBER" size=30 class="input" value="" maxlength="8"><br/>(YYYYMMDD)</td>
+		  <td width="150" align="left" bgcolor="#F6F6F6">회원 CI<br/>(USER_CI)</td>
+		  <td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_CI" size=30 class="input" value=""><br/></td>
+		</tr>
+		<tr style="display:none;">
+		  <td width="150" align="left" bgcolor="#F6F6F6">휴대폰 번호<br/>(MOBILE_NUMBER)</td>
+		  <td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="MOBILE_NUMBER" size=30 class="input" value="" maxlength="11"><br/>-(하이픈) 없이 입력</td>
+		</tr>
+
+	  </table>
+
+	</form>
+
+
+	<div style="padding : 0px 0 10px 0; width:100%; display: block; float:left; ">
+	  <br/>
+	  <input type="button" value="결제창 호출(submit)" onclick="javascript:checkSubmit();">
+	  <br/>
+	</div>
+  
+  </div>
+
+</body>
+</html>
