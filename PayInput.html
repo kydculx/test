@@ -1,150 +1,81 @@
-<%@ page contentType="text/html; charset=EUC-KR" %>
-<%@ page import="com.galaxia.api.util.*"%>
-<%@ page import="java.util.* "%>    
-<%
-	/*
-	 ------------------------------------------------------------------------------------- 
-	 í•´ë‹¹ í˜ì´ì§€ëŠ” ë¹Œê²Œì´íŠ¸ ê²°ì œë¥¼ ìœ„í•œ "ê²°ì œ ìš”ì²­(ì¸ì¦ìš”ì²­)" í…ŒìŠ¤íŠ¸ í˜ì´ì§€ ì…ë‹ˆë‹¤.
-	 ------------------------------------------------------------------------------------- 
+<!--
+	°¶·°½Ã¾Æ ¸Ó´ÏÆ®¸® °áÁ¦Ã¢À» È£ÃâÇÏ´Â ÆäÀÌÁö
+	»ùÇÃÀÇ ±âº» ¼³Á¤µÈ º¯¼ö ¹× °ªÀº ÅëÇÕ Æ÷ÀÎÆ® °áÁ¦¸¦ À§ÇÑ ¿¬µ¿ ¿¹½Ã
+	°áÁ¦ ¼ö´Üº° ÆÄ¶ó¸ŞÅÍ ¿¬µ¿ ±Ô°İÀº °¡¸ÍÁ¡ ¸Ş´º¾ó 4.1.2 °áÁ¦Ã¢ ¿äÃ» ÆÄ¶ó¹ÌÅÍ Á¤º¸¸¦ Âü°í
+-->
 
-	 â€»í…ŒìŠ¤íŠ¸ ê²°ì œë¥¼ ì›í•˜ì‹ ë‹¤ë©´,
-	 1. ê²°ì œ ì •ë³´ (returnUrl, cancelUrl) ê°€ë§¹ì  í™˜ê²½ì— ë§ê²Œ ë³€ê²½
-	 2. PayReturn.jspì˜ CONF_PATHê²½ë¡œ ì„¤ì • (config.ini ê²½ë¡œ ì„¤ì •)
-	 3. CancleReturn.jspì˜ CONF_PAHTê²½ë¡œ ì„¤ì •	(config.ini ê²½ë¡œ ì„¤ì •)
-	 4. config.ini ì˜ ë¡œê·¸ íŒŒì¼ ê²½ë¡œ ë° ê¶Œí•œ ì„¤ì •
-	 	- í•´ë‹¹ ì„¤ì • ì™„ë£Œ í›„ ê·¸ëŒ€ë¡œ í…ŒìŠ¤íŠ¸ ê²°ì œ ì§„í–‰í•˜ì‹œë©´ ë©ë‹ˆë‹¤.
-	 
-	 â€»ì‹¤ì œ ìƒìš© í…ŒìŠ¤íŠ¸ë¥¼ ì›í•˜ì‹ ë‹¤ë©´,
-	 1. ê²°ì œ ì •ë³´ (serviceId, returnUrl, cancelUrl)ë¥¼ ë³€ê²½  -> ê³„ì•½ ì‹œ ë°›ì€ serviceId ì •ë³´ë¥¼ ë„£ìœ¼ì‹œë©´ ë©ë‹ˆë‹¤.
-	 2. config.ini ì˜ Key,Iv ê°’ ë³€ê²½ (ê°€ë§¹ì  ê´€ë¦¬ì ì–´ë“œë¯¼ì—ì„œ í™•ì¸ ê°€ëŠ¥)
-	 3. config.ini ì˜ mode = 1(ìƒìš©)ìœ¼ë¡œ ë³€ê²½ í›„ ì‹¤ ê²°ì œ í…ŒìŠ¤íŠ¸ í•˜ì‹œê¸¸ ë°”ëë‹ˆë‹¤. 
-	  	- ìƒìš© í…ŒìŠ¤íŠ¸ëŠ” ì‹¤ì œ ê³¼ê¸ˆì´ ì´ë¤„ì§€ëŠ” ì  ìœ ì˜í•˜ì‹œê¸¸ ë°”ëë‹ˆë‹¤.
-	  	------------------------------------------------------------------------------------- 
-	*/
-	
-	//ë³€ìˆ˜ ì •ì˜
-	String transactionId = null;
-	String responseCode =null;  
-	String responseMessage = null;
-	String detailResponseCode = null;
-	String detailResponseMessage = null;
-	String serviceCode = null;
-	
-	//ë‚ ì§œë³€ìˆ˜ ì„ ì–¸ 
-	Calendar today = Calendar.getInstance(); 
-	String year = Integer.toString(today.get(Calendar.YEAR));
-	String month = Integer.toString(today.get(Calendar.MONTH)+1);
-	String date = Integer.toString(today.get(Calendar.DATE));
-	String hour = Integer.toString(today.get(Calendar.HOUR_OF_DAY));
-	String minute = Integer.toString(today.get(Calendar.MINUTE));
-	String second = Integer.toString(today.get(Calendar.SECOND));
-		
-	if(today.get(Calendar.MONTH)+1 < 10) month = "0" + month ;
-	if(today.get(Calendar.DATE) < 10) date = "0" + date ;
-	if(today.get(Calendar.HOUR_OF_DAY) < 10) hour = "0" + hour ;
-	if(today.get(Calendar.MINUTE) < 10) minute = "0" + minute ;
-	if(today.get(Calendar.SECOND) < 10) second = "0" + second ;
-	
-	//================================================
-	// 1. ê°€ë§¹ì  ê²°ì œ ìš”ì²­ í…ŒìŠ¤íŠ¸ ê³µí†µ ì •ë³´
-	//================================================
-	String serviceId			="glx_api";				//í…ŒìŠ¤íŠ¸ ì•„ì´ë”” ì¼ë°˜ê²°ì œ : glx_api	
-	String userId 				="user_id";
-	String itemName		="í…ŒìŠ¤íŠ¸ìƒí’ˆ_123";
-	String itemCode			="item_code";
-	String amount			="1004";
-	String userName		="í™ê¸¸ë™";
-	String userEmail		="test@test.com";		
-	String orderDate		= year+month+date+hour+minute+second ;
-	String orderId			="test_"+orderDate;
-	String returnUrl			="http://127.0.0.1/BillgatePay-JSP/PayReturn.jsp";  // *ê°€ë§¹ì  ìˆ˜ì • í•„ìˆ˜ 
-	String checkSum		="";
-	String cancelFlag		="Y";
-	String reserved1		="ì˜ˆë¹„ë³€ìˆ˜1";
-	String reserved2		="ì˜ˆë¹„ë³€ìˆ˜2";
-	String reserved3		="ì˜ˆë¹„ë³€ìˆ˜3";
-    
-	//================================================
-	// 2. ê²°ì œ ìš”ì²­ ì‹œ ìœ„ë³€ì¡° ë°©ì§€ë¥¼ ìœ„í•œ CHECKSUM ìƒì„±
-	//================================================
-	/*
-	*	*CHECK_SUM 
-	*	: ê²°ì œ ìš”ì²­ ì‹œ ìœ„ë³€ì¡° ë°©ì§€ ì²´í¬ë¥¼ ìœ„í•´ CHECK_SUM ìƒì„±
-	*	SERVICE_ID , ORDER_ID , AMOUNT 3ê°œì˜ ê°’ì„ ê°€ì§€ê³  ë‹¹ì‚¬ ê²°ì œ ëª¨ë“ˆ billgateApi.jarë¥¼ í†µí•´ ì¤‘ë³µë˜ì§€ ì•ŠëŠ” ìœ ì¼í•œ ê°’ ìƒì„±.		
-	*/		
-	String temp = serviceId + orderId + amount;
-	checkSum = ChecksumUtil.genCheckSum(temp);
-
-%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="EUC-KR">
-<title>ë¹Œê²Œì´íŠ¸ ê²°ì œ í…ŒìŠ¤íŠ¸ ìƒ˜í”Œí˜ì´ì§€</title>
-<!--í…ŒìŠ¤íŠ¸ ì„œë²„ js-->
-<script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js" />
-<!--ìƒìš© ì„œë²„ js-->
-<!--<script type="text/javascript" src="https://pay.billgate.net/paygate/plugin/gx_web_client.js" /> -->
-<script type="text/javascript"></script>
-<script>
+<title>°áÁ¦ Å×½ºÆ®</title>
+<script type="text/javascript" src="http://tpay.billgate.net/paygate/plugin/gx_web_client.js" ></script>
+<!--Å×½ºÆ® ¼­¹ö js-->
 
-	//============================================================
-    // ê²°ì œì°½ í˜¸ì¶œ 
-    //==========================================================
-    function checkSubmit(viewType) {
-        var serviceCode = document.getElementById("selectPay").value;
-
-        if ("null" == serviceCode || "" == serviceCode) {
-            alert("ê²°ì œìˆ˜ë‹¨ì„ ì„ íƒí•´ì£¼ì„¸ìš”.");
-            return;
-        }
-
-		if ("null" == viewType || "" == viewType) {
-			alert("ë·° íƒ€ì…ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
-			return;
-		}
-
-		/*
-		GX_pay(
-		frmName : ê²°ì œ form name ì…ë ¥, 
-		viewType : layerpopup ë ˆì´ì–´íŒì—…, popup : ìœˆë„ìš°íŒì—…, submit : í˜ì´ì§€ ì´ë™ 
-		protocolType : http_tpay(í…ŒìŠ¤íŠ¸ http), https_tpay(í…ŒìŠ¤íŠ¸ https), https_pay(ìƒìš© https)
-		*/	
-		GX_pay("payment",viewType,"https_tpay");
+<script type="text/javascript">
+	
+    function init(){
+        var HForm = document.payment;
+        
+		HForm.SERVICE_CODE.value = '4100'			
+		// ¼­ºñ½º ÄÚµå :	µµ¼­»óÇ°±Ç : 0100, ¹®È­»óÇ°±Ç : 0200°ÔÀÓ¹®È­»óÇ°±Ç : 0300, ÇØÇÇ¸Ó´Ï»óÇ°±Ç : 0500, Ä³½Ã°ÔÀÌÆ® : 0700, ½Å¿ëÄ«µå : 0900, 
+		//					°èÁÂÀÌÃ¼ : 1000, ÈŞ´ëÆù : 1100, Æùºô : 1200, Æ¼¸Ó´Ï : 1600, °¡»ó°èÁÂ : 1800, Æ¾Ä³½Ã : 2500, ¿¡±×¸Ó´Ï : 2600, ÅëÇÕÆ÷ÀÎÆ®°áÁ¦ : 4100
+		
+		HForm.SERVICE_ID.value = "M2103135";								// Å×½ºÆ® ¾ÆÀÌµğ : M2103135
+        HForm.ORDER_DATE.value = getStrDate();								// ÁÖ¹®ÀÏ½Ã
+        HForm.ORDER_ID.value = "test_" + getStrDate();						// ÁÖ¹®¹øÈ£
+        HForm.USER_ID.value = "user_id";									// °í°´ID
+        HForm.USER_NAME.value = "È«±æµ¿";									// °í°´¸í
+        HForm.USER_EMAIL.value = "test@test.com";							// °í°´ÀÌ¸ŞÀÏ
+        HForm.ITEM_CODE.value = "item_code";								// »óÇ°ÄÚµå
+        HForm.ITEM_NAME.value = "Å×½ºÆ®»óÇ°_123";							// »óÇ°¸í
+        HForm.AMOUNT.value = "1004";										// ±İ¾×
+        HForm.RETURN_URL.value = "http://127.0.0.1:88/JSP/PayReturn.asp";	// °¡¸ÍÁ¡ Ãø ¸®ÅÏ URL : °¡¸ÍÁ¡ ÃøÀÇ WEB ¼­ºñ½º Æ¯¼º(JSP, ASP, ASP.NET, PHP)¿¡ ¸Âµµ·Ï ¼³Á¤
+        HForm.CANCEL_FLAG.value = "Y"										// Ãë¼Ò°á°ú Àü´Ş ¿©ºÎ (Y, N)
+		HForm.WEBAPI_FLAG.value = "Y"										// WEBAPI  »ç¿ë ¿©ºÎ (Y, N)
+        HForm.RESERVED1.value = "¿¹ºñº¯¼ö1"									// ¿¹ºñº¯¼ö1
+        HForm.RESERVED2.value = "¿¹ºñº¯¼ö2"									// ¿¹ºñº¯¼ö2
+        HForm.RESERVED3.value = "¿¹ºñº¯¼ö3"									// ¿¹ºñº¯¼ö3
     }
 
 	//==========================
-	// ë ˆì´ì–´ íŒì—… ë‹«ê¸°
+	// °áÁ¦Ã¢ È£Ãâ 
+	//==========================
+	function checkSubmit(viewType){
+		var HForm = document.payment;
+		
+		var serviceId = HForm.SERVICE_ID.value;
+		var serviceCode = HForm.SERVICE_CODE.value;
+
+		if("null"==serviceCode||""==serviceCode){
+			alert("°áÁ¦¼ö´ÜÀ» ¼±ÅÃÇØÁÖ¼¼¿ä.");
+			return;
+		}
+		
+		if ("null" == viewType || "" == viewType) {
+			alert("ºä Å¸ÀÔÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+		}
+		/*
+		GX_pay(
+		frmName : °áÁ¦ form name ÀÔ·Â, 
+		viewType : layerpopup ·¹ÀÌ¾îÆË¾÷, popup : À©µµ¿ìÆË¾÷, submit : ÆäÀÌÁö ÀÌµ¿ 
+		protocolType : http_tpay(Å×½ºÆ® http), https_tpay(Å×½ºÆ® https), https_pay(»ó¿ë https)
+		*/	
+		
+		GX_pay("payment", viewType ,"http_tpay");	//Å×½ºÆ® ¼­¹ö ¿¬µ¿(½Ç°áÁ¦°¡ ¹ß»ıÇÏÁö ¾ÊÀ½)
+		//GX_pay("payment", viewType ,"https_pay");	//»ó¿ë ¼­¹ö ¿¬µ¿(½Ç°áÁ¦°¡ ¹ß»ı)
+	}
+	
+
+	//==========================
+	// ·¹ÀÌ¾î ÆË¾÷ ´İ±â
 	//==========================
 	function layer_close(){
 		GX_payClose();
 	}
 
 	//==========================
-	// ì²´í¬ì„¬ ì¬ìƒì„±
-	//==========================
-	function makeCheckSum(){
-		var HForm = document.payment;
-		HForm.ORDER_ID.value = "test_"+getStrDate();	//ì£¼ë¬¸ë²ˆí˜¸ ì¬ìƒì„±
-		
-	    var CheckSum = HForm.SERVICE_ID.value + HForm.ORDER_ID.value + HForm.AMOUNT.value;
-		var xhr = new XMLHttpRequest();
-		var data = "CheckSum="+CheckSum;
-
-		//Ajax í†µì‹ 
-		xhr.onload = function(){
-			if(xhr.readyState == 4 && xhr.status == 200){ //í†µì‹  ì„±ê³µ ì‹œ
-				console.log(xhr.responseText);
-				HForm.CHECK_SUM.value = xhr.responseText.trim();  //ì¬ìƒì„±ëœ ì²´í¬ì¸
-			}
-		};
-		
-		xhr.open("POST","./PayCheckSum.jsp",true);
-		xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-		xhr.send(data);    
-	}
- 
-	//==========================
-	// í˜„ì¬ ë‚ ì§œì‹œê°„ ê°€ì ¸ì˜¤ê¸°
+	// ÇöÀç ³¯Â¥½Ã°£ °¡Á®¿À±â
 	//==========================
 	function getStrDate() {
 		var date = new Date();
@@ -156,272 +87,123 @@
 						((date.getSeconds()) < 10 ? "0" + (date.getSeconds()).toString() : (date.getSeconds()).toString());
 		return strDate;
 	}
-	
-	//==========================
-	// ê²°ì œ ìˆ˜ë‹¨ ì„ íƒ
-	//==========================
-    function paySelect() {
 
-		var HForm = document.payment;
+	function makeOrderId(){
+		document.payment.ORDER_ID.value = "test_" + getStrDate();	// ÁÖ¹®¹øÈ£ ½Å±Ô»ı¼º
+	}
 
-		var serviceCodeSelect = document.getElementById("selectPay");
-		var serviceCode = serviceCodeSelect.options[serviceCodeSelect.selectedIndex].value;
-		
-		HForm.SERVICE_CODE.value = serviceCode;
-		HForm.ORDER_ID.value = "test_" + getStrDate();//ì£¼ë¬¸ë²ˆí˜¸ ì¬ìƒì„±
-		HForm.ORDER_DATE.value = getStrDate();			//ì£¼ë¬¸ì¼ì‹œ ì¬ìƒì„±
-		makeCheckSum();
-
-		document.getElementById("add_view").style.display="none";
-		document.getElementById("add_card_view1").style.display="none";
-		document.getElementById("add_card_view2").style.display="none";
-		document.getElementById("add_card_view3").style.display="none";
-		document.getElementById("add_vaccount_view").style.display="none";
-		document.getElementById("add_mobile_view1").style.display="none";
-		document.getElementById("add_mobile_view2").style.display="none";
-		document.getElementById("add_moneytree_view").style.display="none";
-		document.getElementById("add_common_view1").style.display="none";
-		document.getElementById("add_common_view2").style.display="none";
-
-		//ê²°ì œì°½ í˜¸ì¶œ URLì„¤ì •
-		switch(serviceCode){
-			case'0900':	//ì‹ ìš©ì¹´ë“œ
-				document.getElementById("add_view").style.display="";
-				document.getElementById("add_card_view1").style.display="";
-				document.getElementById("add_card_view2").style.display="";
-				document.getElementById("add_card_view3").style.display="";
-
-				break;
-
-			case'1800':	//ê°€ìƒê³„ì¢Œ
-				document.getElementById("add_view").style.display="";
-				document.getElementById("add_vaccount_view").style.display="";
-				document.getElementById("add_common_view2").style.display="";
-
-				break;
-
-			case'1100':	//íœ´ëŒ€í°
-				document.getElementById("add_view").style.display="";
-				document.getElementById("add_mobile_view1").style.display="";
-				document.getElementById("add_mobile_view2").style.display="";
-				document.getElementById("add_common_view1").style.display="";
-				
-				(document.getElementsByName("SOCIAL_NUMBER"))[0].disabled = false;
-				(document.getElementsByName("SOCIAL_NUMBER"))[1].disabled = true;
-
-				break;
-
-			case'4100':	//ë¨¸ë‹ˆíŠ¸ë¦¬
-				document.getElementById("add_view").style.display="";
-				document.getElementById("add_moneytree_view").style.display="";
-				document.getElementById("add_common_view1").style.display="";
-				
-				(document.getElementsByName("SOCIAL_NUMBER"))[0].disabled = true;
-                (document.getElementsByName("SOCIAL_NUMBER"))[1].disabled = false;
-				
-				break;
-
-			default:	//ê·¸ì™¸
-				break;
-		}	
-    }
 </script>	
 <style>
 	header{position: fixed;	top: 0;	left: 0; right: 0;}	
-	body, tr, td {font-size:9pt; font-family:ë§‘ì€ê³ ë”•,verdana; }
-	table {	border-collapse: collapse;}	}
+	body, tr, td {font-size:9pt; font-family:¸¼Àº°íµñ,verdana; }
+	table {	border-collapse: collapse;}	
 </style>
 </head>
-<body>
+<body onload="init()">
 <header>
 	<div style="width:100%; heghit:12px; font-size:13px; font-weight:bold; color: #FFFFFF; background:#ff4280;text-align: center;">
-		ë¹Œê²Œì´íŠ¸ ê²°ì œ í…ŒìŠ¤íŠ¸ ìƒ˜í”Œí˜ì´ì§€
+		ºô°ÔÀÌÆ® °áÁ¦ Å×½ºÆ® »ùÇÃÆäÀÌÁö
 	</div>
 </header>
 
-	<div id="payAll">
-		<div style="padding : 20px 0 20px 0; width:100%; display: block; float:left">
-			<b style="color:red;"><ìœ ì˜ì‚¬í•­></b><br/>
-		<b>- ë‹¹ì‚¬ì—ì„œ ì œê³µí•˜ëŠ” ìƒ˜í”Œì€ ì—°ë™ì— ì´í•´ë¥¼ ë•ê¸°ìœ„í•´ ë‹¨ê³„ë³„ë¡œ ë‚˜ì—´í•œ ê²ƒì´ë¯€ë¡œ, ë™ì¼í•œ êµ¬ì¡°ë¥¼ ìœ ì§€í•  í•„ìš”ê°€ ì—†ìŒì„ ì•Œë ¤ë“œë¦½ë‹ˆë‹¤.</b><br/>
-		- SERVICE_ID, AMOUNT, ORDER_ID ë³€ê²½ ì‹œ <b>[ì²´í¬ì¸ ì¬ìƒì„±]</b> ë²„íŠ¼ì„ í´ë¦­í•˜ì—¬ ì²´í¬ì¸ì„ ì¬ìƒì„±í•˜ì—¬ì•¼ ê²°ì œê°€ ê°€ëŠ¥í•©ë‹ˆë‹¤.<br/>
-		- ê±°ë˜ ê±´ êµ¬ë³„ì„ ìœ„í•´ ì¤‘ë³µëœ ì£¼ë¬¸ë²ˆí˜¸(ORDER_ID)ë¡œ ê³¼ê¸ˆ ìš”ì²­ì€ ê¶Œì¥í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.<br/>	
-		</div>
+		
+	<div style="padding : 20px 0 20px 0; width:100%; display: block; float:left; ">
+		<b style="color:red;"><À¯ÀÇ»çÇ×></b><br/>
+		<b>- ´ç»ç¿¡¼­ Á¦°øÇÏ´Â »ùÇÃÀº ¿¬µ¿¿¡ ÀÌÇØ¸¦ µ½±âÀ§ÇØ ´Ü°èº°·Î ³ª¿­ÇÑ °ÍÀÌ¹Ç·Î, µ¿ÀÏÇÑ ±¸Á¶¸¦ À¯ÁöÇÒ ÇÊ¿ä°¡ ¾øÀ½À» ¾Ë·Áµå¸³´Ï´Ù.</b><br/>
+		- °Å·¡ °Ç ±¸º°À» À§ÇØ Áßº¹µÈ ÁÖ¹®¹øÈ£(ORDER_ID)·Î °ú±İ ¿äÃ»Àº ±ÇÀåÇÏÁö ¾Ê½À´Ï´Ù.<br/>	
+	</div>
 		
 	<div style="width:100%; display: block; float:left;">
-			<form name="payment" method="post">
-				<table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">	
-					<tr>
-						<td colspan="4" height="20" align="left" bgcolor="#C0C0C0"><b>ê²°ì œ ì •ë³´</b></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê²°ì œìˆ˜ë‹¨</td>
-						<td width="150" bgcolor="#FFFFFF" colspan="3">
-							<select id="selectPay" onChange="paySelect()">
-								<option value="" selected>==ì„ íƒ==</option>
-								<option value="0100">ë„ì„œ(0100)</option>
-								<option value="0200">ë¬¸í™”(0200)</option>
-								<option value="0300">ê²Œì„ë¬¸í™”(0300)</option>
-								<option value="0500">í•´í”¼ë¨¸ë‹ˆ(0500)</option>
-								<option value="0700">ìºì‹œê²Œì´íŠ¸(0700)</option>
-								<option value="0900">ì‹ ìš©ì¹´ë“œ(0900)</option>
-								<option value="1100">íœ´ëŒ€í°(1100)</option>
-								<option value="1200">í°ë¹Œ(1200)</option>
-								<option value="1600">í‹°ë¨¸ë‹ˆ(1600)</option>
-								<option value="1800">ê°€ìƒê³„ì¢Œ(1800)</option>
-								<option value="1000">ê³„ì¢Œì´ì²´(1000)</option>
-								<option value="2500">í‹´ìºì‹œ(2500)</option>
-								<option value="2600">ì—ê·¸ë¨¸ë‹ˆ(2600)</option>
-								<option value="4100">í†µí•©í¬ì¸íŠ¸(4100)</option>
-							</select>
-						</td>
-					</tr>	
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê°€ë§¹ì ì•„ì´ë””<br/>(SERVICE_ID)</td>
-						<td  width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_ID" id="SERVICE_ID" size=30 class="input" value="<%=serviceId%>"><br/>(ì¼ë°˜ê²°ì œ:glx_api)</td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê²°ì œíƒ€ì…<br/>(SERVICE_TYPE)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_TYPE" size=40 class="input" value="0000"><br/>(ì¼ë°˜ê²°ì œ:0000)</td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì„œë¹„ìŠ¤ì½”ë“œ<br/>(SERVICE_CODE)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_CODE" id="SERVICE_CODE" size=30 class="input" value=""></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê²°ì œ ê¸ˆì•¡<br/>(AMOUNT)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="AMOUNT" size=40 class="input" value="<%=amount%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ìƒí’ˆëª…<br/>(ITEM_NAME)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" size=30 class="input" value="<%=itemName%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ìƒí’ˆì½”ë“œ<br/>(ITEM_CODE)</td>
-						<td bgcolor="#FFFFFF"><input type="text" name="ITEM_CODE" size=40 class="input" value="<%=itemCode%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê³ ê° ì•„ì´ë””<br/>(USER_ID)</td>
-						<td bgcolor="#FFFFFF"><input type="text" name="USER_ID" size=30 class="input" value="<%=userId%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê³ ê°ëª…<br/>(USER_NAME)</td>
-						<td bgcolor="#FFFFFF"><input type="text" name="USER_NAME" size=40 class="input" value="<%=userName%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì£¼ë¬¸ë²ˆí˜¸<br/>(ORDER_ID)</td>
-						<td bgcolor="#FFFFFF"><input type="text" name="ORDER_ID" size=30 class="input" value="<%=orderId%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì£¼ë¬¸ì¼ì‹œ<br/>(ORDER_DATE)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="ORDER_DATE" size=40 class="input" value="<%=orderDate%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ë¦¬í„´URL<br/>(RETURN_URL)</td>
-						<td bgcolor="#FFFFFF" colspan="3"><input type="text" name="RETURN_URL" size=80 class="input" value="<%=returnUrl%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ê³ ê°ì´ë©”ì¼<br/>(USER_EMAIL)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_EMAIL" size=30 class="input" value="<%=userEmail%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">CheckSum<br/>(CHECK_SUM)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="CHECK_SUM" size=40 class="input" value=""><input type="button" name="" value="ì²´í¬ì¸ ì¬ìƒì„±" onclick="javascript:makeCheckSum()"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì˜ˆë¹„ë³€ìˆ˜1<br/>(RESERVED1)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED1" size=30 class="input" value="<%=reserved1%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì˜ˆë¹„ë³€ìˆ˜2<br/>(RESERVED2)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED2" size=40 class="input" value="<%=reserved2%>"></td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì˜ˆë¹„ë³€ìˆ˜3<br/>(RESERVED3)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED3" size=30 class="input" value="<%=reserved3%>"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì·¨ì†Œê²°ê³¼ ì „ë‹¬ì—¬ë¶€<br/>(CANCEL_FLAG)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="CANCEL_FLAG" size=40 class="input" value="<%=cancelFlag%>"><br/>(Y:Return ì·¨ì†Œ ì‘ë‹µ, N:self.close())</td>
-					</tr>
-					<tr>
-						<td width="150" align="left" bgcolor="#F6F6F6">ë¡œê³ <br/>(LOGO)</td>
-						<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="LOGO" size=80 class="input" value=""><br/>(ì´ë¯¸ì§€ ë¡œê³  URL ì…ë ¥)</td>
-					</tr>
-					<tr id="add_view" style="display:none;">
-						<td colspan="4"><b>ì¶”ê°€ íŒŒë¼ë¯¸í„°</b></td>
-					</tr>
+		<form name="payment" method="post">
+			<table border="1px solid" cellpadding="5" cellspacing="1" bgcolor="#B0B0B0">	
+				<tr>
+					<td colspan="4" height="20" align="left" bgcolor="#C0C0C0"><b>°áÁ¦ Á¤º¸</b></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">°¡¸ÍÁ¡¾ÆÀÌµğ<br/>(SERVICE_ID)</td>
+					<td  width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_ID" id="SERVICE_ID" size=30 class="input"><br/>(ÀÏ¹İ°áÁ¦:glx_api)</td>
+					<td width="150" align="left" bgcolor="#F6F6F6">°áÁ¦Å¸ÀÔ<br/>(SERVICE_TYPE)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_TYPE" size=40 class="input" value="0000"><br/>(ÀÏ¹İ°áÁ¦:0000)</td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">¼­ºñ½ºÄÚµå<br/>(SERVICE_CODE)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SERVICE_CODE" id="SERVICE_CODE" size=30 class="input" value=""></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">°áÁ¦ ±İ¾×<br/>(AMOUNT)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="AMOUNT" size=40 class="input" ></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">»óÇ°¸í<br/>(ITEM_NAME)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="ITEM_NAME" size=30 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">»óÇ°ÄÚµå<br/>(ITEM_CODE)</td>
+					<td bgcolor="#FFFFFF"><input type="text" name="ITEM_CODE" size=40 class="input"></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">°í°´ ¾ÆÀÌµğ<br/>(USER_ID)</td>
+					<td bgcolor="#FFFFFF"><input type="text" name="USER_ID" size=30 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">°í°´¸í<br/>(USER_NAME)</td>
+					<td bgcolor="#FFFFFF"><input type="text" name="USER_NAME" size=40 class="input"></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">°í°´ÀÌ¸ŞÀÏ<br/>(USER_EMAIL)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_EMAIL" size=30 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">ÁÖ¹®ÀÏ½Ã<br/>(ORDER_DATE)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="ORDER_DATE" size=40 class="input"></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">ÁÖ¹®¹øÈ£<br/>(ORDER_ID)</td>
+					<td bgcolor="#FFFFFF" colspan="3">
+						<input type="text" name="ORDER_ID" size=30 class="input" >
+						<input type="button" name="" value="ÁÖ¹®¹øÈ£ Àç»ı¼º" onclick="javascript:void(makeOrderId())"></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö1<br/>(RESERVED1)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED1" size=30 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö2<br/>(RESERVED2)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED2" size=40 class="input"></td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">¿¹ºñº¯¼ö3<br/>(RESERVED3)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RESERVED3" size=30 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">Ãë¼Ò°á°ú Àü´Ş¿©ºÎ<br/>(CANCEL_FLAG)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="CANCEL_FLAG" size=40 class="input""><br/>(Y:Return Ãë¼Ò ÀÀ´ä, N:self.close())</td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">¸®ÅÏURL<br/>(RETURN_URL)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="RETURN_URL" size=40 class="input"></td>
+					<td width="150" align="left" bgcolor="#F6F6F6">WEB-API »ç¿ë¿©ºÎ<br/>(CANCEL_FLAG)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="WEBAPI_FLAG" size=40 class="input""><br/>(Y:»ç¿ë, N:¹Ì»ç¿ë)</td>
+				</tr>
+				<tr>
+					<td width="150" align="left" bgcolor="#F6F6F6">·Î°í<br/>(LOGO)</td>
+					<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="LOGO" size=80 class="input" value=""><br/>(ÀÌ¹ÌÁö ·Î°í URL ÀÔ·Â)</td>
+				</tr>
+				
+				<!-- °áÁ¦Ã¢ Ãß°¡ ÆÄ¶ó¸ŞÅÍ ¿µ¿ª-->
+				<!--
+				<tr id="add_view"">
+					<td colspan="4"><b>Ãß°¡ ÆÄ¶ó¹ÌÅÍ ¿µ¿ª</b></td>
+				</tr>
+				<tr id="add_moneytree_view" style="display:none;">
+					<td width="150" align="left" bgcolor="#F6F6F6">»ı³â¿ùÀÏ<br/>(SOCIAL_NUMBER)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="SOCIAL_NUMBER" size=30 class="input" value="" maxlength="8"><br/>(YYYYMMDD)</td>
+					<td width="150" align="left" bgcolor="#F6F6F6">È¸¿ø CI<br/>(USER_CI)</td>
+					<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_CI" size=30 class="input" value=""><br/></td>
+				</tr>
+				<tr style="display:none;">
+					<td width="150" align="left" bgcolor="#F6F6F6">ÈŞ´ëÆù ¹øÈ£<br/>(MOBILE_NUMBER)</td>
+					<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="MOBILE_NUMBER" size=30 class="input" value="" maxlength="11"><br/>-(ÇÏÀÌÇÂ) ¾øÀÌ ÀÔ·Â</td>
+				</tr>
+				-->
+			</table>
+		</form>
 
-					<!-- ì‹ ìš©ì¹´ë“œ ì˜ì—­start -->
-					<tr id="add_card_view1" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">í• ë¶€ê°œì›”ìˆ˜<br/>(INSTALLMENT_PERIOD)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="INSTALLMENT_PERIOD" size=30 class="input" value="0:3:6:9:12"></td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì¹´ë“œì‚¬ì„ íƒ<br/>(CARD_TYPE)</td>
-						<td bgcolor="#FFFFFF">
-							<select name="CARD_TYPE" >
-								<option value="0000">---ì¹´ë“œì‚¬ ì„ íƒ---</option>
-									<option value="0052">ë¹„ì”¨ì¹´ë“œ(BC card)</option>
-									<option value="0050">êµ­ë¯¼ì¹´ë“œ(KB card)</option>
-									<option value="0073">í˜„ëŒ€ì¹´ë“œ(Hyundai card)</option>
-									<option value="0054">ì‚¼ì„±ì¹´ë“œ(Samsung card)</option>
-									<option value="0053">ì‹ í•œ(LG)ì¹´ë“œ(Shinhan(LG) card)</option>
-									<option value="0055">ë¡¯ë°ì¹´ë“œ(Lotte card)</option>
-									<option value="0089">ì €ì¶•ì€í–‰(savings bank)</option>
-									<option value="0051">ì™¸í™˜ì¹´ë“œ(Yes card)</option>
-									<option value="0076">í•˜ë‚˜(Hana card)</option>
-									<option value="0079">ì œì£¼(e-jeju bank)</option>
-									<option value="0080">ê´‘ì£¼(kjbank)</option>
-									<option value="0073">ì‹ í˜‘(í˜„ëŒ€)(cu(Hyundai))</option>
-									<option value="0075">ìˆ˜í˜‘(suhyup)</option>
-									<option value="0081">ì „ë¶(jbbank)</option>
-									<option value="0078">ë†í˜‘(NH card)</option>
-									<option value="0084">ì”¨í‹°(Citi card)</option>
-							</select>
-						</td>
-					</tr>
-					<tr id="add_card_view2" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">[í•´ì™¸ì „ìš©]êµ­ë‚´/í•´ì™¸ì¹´ë“œ<br/>(USING_TYPE)</td>
-						<td width="150" bgcolor="#FFFFFF" ><input type="text" name="USING_TYPE" size=30 class="input" value="">(0001:í•´ì™¸ì¹´ë“œ, ê·¸ì™¸)</td>
-						<td width="150" align="left" bgcolor="#F6F6F6">[í•´ì™¸ì „ìš©]ìŠ¹ì¸í†µí™”êµ¬ë¶„<br/>(CURRENCY)</td>
-						<td width="150" bgcolor="#FFFFFF" ><input type="text" name="CURRENCY" size=30 class="input" value=""><br/>(0000:ì›í™”ìŠ¹ì¸, 0001:ë‹¬ëŸ¬ìŠ¹ì¸)</td>
-					</tr>
-					<tr id="add_card_view3" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ì¸ì¦ë°´ë” ì§ì ‘í˜¸ì¶œ<br/>(DIRECT_USE)</td>
-						<td width="150" bgcolor="#FFFFFF"  colspan="3"><input type="text" name="DIRECT_USE" size=30 class="input" value="">(0001:ì§ì ‘í˜¸ì¶œ, ê·¸ì™¸)</td>
-					</tr>
-					<!-- ì‹ ìš©ì¹´ë“œ ì˜ì—­end -->
-					<!-- íœ´ëŒ€í° ì˜ì—­start -->
-					<tr id="add_mobile_view1" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ì£¼ë¯¼ë²ˆí˜¸ ì•6ìë¦¬<br/>(SOCIAL_NUMBER)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="SOCIAL_NUMBER" size=30 class="input" value="" maxlength="6"><br/>ìƒë…„ì›”ì¼(YYMMDD)</td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì´ë™í†µì‹ ì‚¬ ì½”ë“œ<br/>(MOBILE_COMPANY_CODE)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="MOBILE_COMPANY_CODE" size=30 class="input" value="" maxlength="4"><br/>0000:SKT, 0001:KT, 0002:LGU, 0011:CJH, 0010:KCT, 0012:SKL</td>
-					</tr>
-					<tr id="add_mobile_view2" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ì‚¬ì „ì „ë‹¬ íœ´ëŒ€í°ë²ˆí˜¸ ìˆ˜ì •ì—¬ë¶€<br/>(READONLY_HP)</td>
-						<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="READONLY_HP" size=30 class="input" value=""><br/>(Y:ìˆ˜ì •ë¶ˆê°€, N:ìˆ˜ì •ê°€ëŠ¥)</td>
-					</tr>
-					<!-- íœ´ëŒ€í° ì˜ì—­ end-->
-					<!-- í†µí•©í¬ì¸íŠ¸ ì˜ì—­ start-->
-					<tr id="add_moneytree_view" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ìƒë…„ì›”ì¼<br/>(SOCIAL_NUMBER)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="SOCIAL_NUMBER" size=30 class="input" value="" maxlength="8"><br/>(YYYYMMDD)</td>
-						<td width="150" align="left" bgcolor="#F6F6F6">íšŒì› CI<br/>(USER_CI)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="USER_CI" size=30 class="input" value=""><br/></td>
-					</tr>
-					<!-- í†µí•©í¬ì¸íŠ¸ ì˜ì—­ end-->
-					<!-- ê°€ìƒê³„ì¢Œ ì˜ì—­ start -->
-					<tr id="add_vaccount_view" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ì…ê¸ˆë§ˆê° ìœ íš¨ì¼<br/>(QUOTA)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="QUOTA" size=30 class="input" value="" maxlength="2"><br/>(ë¯¸ì…ë ¥ì‹œ ê¸°ë³¸(5), ì§€ì •ê°€ëŠ¥ì¼[1 - 30])</td>
-						<td width="150" align="left" bgcolor="#F6F6F6">ì…ê¸ˆë§ˆê° ìœ íš¨ì‹œê°„<br/>(EXPIRE_TIME)</td>
-						<td width="150" bgcolor="#FFFFFF"><input type="text" name="EXPIRE_TIME" size=30 class="input" value="" maxlength="6"><br/>(ë¯¸ì…ë ¥ì‹œ ê¸°ë³¸(235959) [HH24MISS])</td>
-					</tr>
-					<!-- ê°€ìƒê³„ì¢Œ ì˜ì—­ end-->
-					<!-- (íœ´ëŒ€í°, í†µí•©í¬ì¸íŠ¸) ì˜ì—­ start-->
-					<tr id="add_common_view1" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">íœ´ëŒ€í° ë²ˆí˜¸<br/>(MOBILE_NUMBER)</td>
-						<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="MOBILE_NUMBER" size=30 class="input" value="" maxlength="11"><br/>-(í•˜ì´í”ˆ) ì—†ì´ ì…ë ¥</td>
-					</tr>
-					<!-- (íœ´ëŒ€í°, í†µí•©í¬ì¸íŠ¸) ì˜ì—­ end-->
-					<!-- ê°€ìƒê³„ì¢Œ ì˜ì—­ start -->
-					<tr id="add_common_view2" style="display:none;">
-						<td width="150" align="left" bgcolor="#F6F6F6">ì—ìŠ¤í¬ë¡œ ì‚¬ìš© ì—¬ë¶€(ESCROW_FLAG)</td>
-						<td width="150" bgcolor="#FFFFFF" colspan="3"><input type="text" name="ESCROW_FLAG" size=30 class="input" value="">(Y:ì—ìŠ¤í¬ë¡œ í•„ìˆ˜ ë™ì˜, N:ì—ìŠ¤í¬ë¡œ ë¯¸ì ìš©)</td>
-					</tr>
-					<!-- ê°€ìƒê³„ì¢Œ ì˜ì—­ end -->		
-				</table>
-			</form>
-
-		<div>
-			<br/><input type="button" value="ê²°ì œì°½ í˜¸ì¶œ(layerpopup) PC ì „ìš©" onclick="javascript:checkSubmit('layerpopup');">
-							&nbsp;<input type="button" value="ê²°ì œì°½ í˜¸ì¶œ(submit)" onclick="javascript:checkSubmit('submit');">
-							&nbsp;<input type="button" value="ê²°ì œì°½ í˜¸ì¶œ(popup)" onclick="javascript:checkSubmit('popup');">	
+		<div style="padding : 0px 0 10px 0; width:100%; display: block; float:left; ">
+			<br/><input type="button" value="°áÁ¦Ã¢ È£Ãâ(layerpopup) PC Àü¿ë" onclick="javascript:checkSubmit('layerpopup');">
+			&nbsp;<input type="button" value="°áÁ¦Ã¢ È£Ãâ(submit)" onclick="javascript:checkSubmit('submit');">
+			&nbsp;<input type="button" value="°áÁ¦Ã¢ È£Ãâ(popup)" onclick="javascript:checkSubmit('popup');">
+			<br/>
 		</div>
-	</div>				
-			
+	</div>
+
 </body>
 </html>
